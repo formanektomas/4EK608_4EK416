@@ -1,4 +1,4 @@
-# Old presentations, relevant for courses up to school year 2019/2020
+# Old presentations -- relevant for courses up to school year 2019/2020
 
 --- 
 
