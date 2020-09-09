@@ -23,12 +23,11 @@ MS Teams groups will be established and students will be invited by e-mail.
 
 ---
 
-### Block 1: Data handling in R
+### Block 1: Estimators and predictions
 
-+ Importing data from major databases (Eurostat, IMF, Yahoo finance, etc.)
-+ [Markdown](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) for data/output presentation & visualization using `ggplot2`
-+ Tidyverse packages `tidyr`, `dplyr`, pipe operator `%>%`
-+ Missing data, multiple imputation 
++ Repetition from BSc courses  
++ LRM estimators & non-linear extensions  
++ Predictions from regression models  
 
 #### Materials for Block 1  
 
@@ -37,7 +36,24 @@ MS Teams groups will be established and students will be invited by e-mail.
   
 ---
 
+### Block 2: Estimators and predictions
+
 ---
+
+### Block 3: Panel data models
+
+---
+
+### Block 4: Simultaneous equation models (SEMs) & Instrumental variables regression (IVR)
+
+---
+
+### Block 5: Vector autoregression models (VARs)
+
+---
+
+
+
 
 Please note that lectures (pdf presentations) and seminar workfiles (R scripts) can be updated without prior notice:  
 * clarifications, small edits and error corrections are made often,
