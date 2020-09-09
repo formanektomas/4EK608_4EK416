@@ -3,7 +3,7 @@
 
 --- 
 
-**Seminar held by:**  
+**Course(s) held by:**  
 [Tomas Formanek](https://insis.vse.cz/auth/lide/clovek.pl?id=46723)     
 Department of Econometrics   
 Faculty of Informatics and Statistics  
@@ -19,7 +19,7 @@ University of Economics, Prague
 ---
 
 **COVID 19 arrangements for WS 2020/2021**  
-MS Teams groups will be established and students will be contacted/invited through their email addresses.
+MS Teams groups will be established and students will be invited by e-mail.
 
 ---
 
