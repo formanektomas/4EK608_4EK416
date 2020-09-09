@@ -36,7 +36,11 @@ MS Teams groups will be established and students will be invited by e-mail.
   
 ---
 
-### Block 2: Estimators and predictions
+### Block 2: Regression models based on time series
+
++ Stationarity, cointegration  
++ Error correction model (ECM)  
++ Distributed lag models, PAM, AEH  
 
 ---
 
@@ -44,16 +48,21 @@ MS Teams groups will be established and students will be invited by e-mail.
 
 ---
 
-### Block 4: Simultaneous equation models (SEMs) & Instrumental variables regression (IVR)
+### Block 4: Simultaneous equations 
+
++ Instrumental variables, IVR  
++ Identification  
++ Simultaneous equation models (SEMs)  
 
 ---
 
 ### Block 5: Vector autoregression models (VARs)
 
++ VAR models
++ Impulse-response functions (IRFs)  
++ Vector error correction models (VECMs)  
+
 ---
-
-
-
 
 Please note that lectures (pdf presentations) and seminar workfiles (R scripts) can be updated without prior notice:  
 * clarifications, small edits and error corrections are made often,
