@@ -4,13 +4,16 @@ layout: default
 
 ## Basic literature:
 
-+ James, G. et al., [An Introduction to Statistical Learning](http://faculty.marshall.usc.edu/gareth-james/ISL/).
-+ Greene, W.H., Econometric analysis.
++ Greene, W. H. (2012). Econometric Analysis, 7th Edition. Prentice Hall, Upper Saddle River. (chapters 7–11, 13,14,17–21)  
++ Davidson, R., & MacKinnon, J. G. (2004). Econometric theory and methods. New York: Oxford University Press. (chapters 6–15)  
++ Wooldridge, J. M. (2015). Introductory econometrics: A modern approach, 6e. Cengage Learning. (chapters 10-18)  
++ Zivot, E., & Wang, J. (2006). Modelling Financial Time Series with S-PLUS, Second Edition. Springer-Verlag New York. (chapters 11 and 12) 
++ Hušek, R. (2007). Ekonometrická analýza. Oeconomica, Praha (in Czech language)
 
 ## Supporting literature:
 
-+ Hastie, T. et al., [The Elements of
-Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/).
++ James, G. et al., [An Introduction to Statistical Learning](http://faculty.marshall.usc.edu/gareth-james/ISL/).
++ Hastie, T. et al., [The Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/).
 
 --- 
 
@@ -21,16 +24,7 @@ Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/).
 
 --- 
 
-
-## Datasets
-
-+ [https://vincentarelbundock.github.io/Rdatasets/datasets.html](https://vincentarelbundock.github.io/Rdatasets/datasets.html)
-+ [https://r-dir.com/reference/datasets.html](https://r-dir.com/reference/datasets.html)
-
----
-
-[Old website for the course (no longer updated)](https://sites.google.com/site/econometricseminar/4ek417) 
-
+[Old website for the course (no longer updated)](https://sites.google.com/site/econometricsvse/advanced-econometrics) 
 
 --- 
 
