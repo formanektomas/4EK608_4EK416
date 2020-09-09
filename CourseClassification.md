@@ -2,50 +2,32 @@
 layout: default
 ---
 
-## Hodnocení – body (max. 100 bodů)
+## Classification – points (max. 100 points)
 
-* Test: max. 50 bodů
-* Seminární práce: max. 50 bodů
-* Home assignments
+* Home assignments: max 20 points (4 assignments, 5 points each).  
+* Midterm tests: max. 30 points (5 short written tests, 6 points each)  
+* Final exam (written test): max. 50 points  
 
 --- 
 
-Hodnocení – stupnice
+Grading scale
 
-     90  a více bodů:    výborně
-     75  až    89 bodů:  velmi dobře
-     60  až    74 bodů:  dobře
+     90 – 100 points: excellent (1)
+     75 – 89 points: very good (2)
+     60 – 74 points: good (3)
+     0 – 59 points: failed (4)
 
 ---
 
-* **Podrobné informace a požadavky k seminární práci** [zde](./SeminarPaper.html)
+**Important dates**  
 
++ 5 short midterm tests are written at conveniently chosen lectures.  
+    + Usually, midterm tests will be written on a bi-weekly basis (3rd week, 5th week, etc....).  
+    + Midterm tests are mostly based on topics covered during the previous 2 weeks.  
+    + If you miss a midterm test (properly reported medical absence only), there will be a special term during the 13th week.
+    + **COVID update:** instructions will be updated if we have to switch from in-class to on-line lectures & seminars.
 
-
-* **Home assignments**
-
-  + Vždy odevzdejte nejpozději den před následujícím cvičením 
-  (cvičení je v ponděli, odevzdání vždy do neděle 23:59).
-  + V kódech používejte komentáře
-  + Nedávejte do odevzdávaného skriptu příkazy k instalaci balíčků
-  
-  
-* **Okruhy k testu**
-  + Termín bude upřesněn
-  + Z následujících okruhů bude náhodně vybráno 5 otázek (10 bodů každá otázka) 
-
-1. Bootstrap a simulace v ekonometrii.  
-2. Analýza panelových dat: FD, FE, RE estimátor.  
-3. Instrumentální proměnné: využití a IV estimátor. Dvoustupňová metoda nejmenších čtverců: využití a 2SLS estimátor.  
-4. Modely simultánních rovnic: strukturní a redukovaný tvar, kritéria identifikace strukturních rovnic, metody odhadu redukovaného a strukturního tvaru.  
-5. Základní modely s omezenou závislou proměnnou (LPM, Logit, Probit) - evaluace modelu, predikce.  
-6. Tobit model, Poissonův regresní model (Count Model).  
-7. Censorovaný a seřezaný regresní model (Censored and Truncated Regression Models). Korekce v případech nenáhodného výběru.  
-8. Zdánlivá regrese, testování jednotkových kořenů, kointegrace.  
-9. Modely korekce chyby a jejich vektorové zobecnění (VECM).  
-10. VAR modely a funkce odezvy (Impulse response functions).  
-11. Predikce a prognózování pomocí ekonometrických modelů. Chowovy testy.  
-
++ Final exam - three dates during the exam period: dates will be announced (see InSIS)
 
 ---
 
