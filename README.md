@@ -56,7 +56,7 @@ MS Teams groups will be established and students will be invited by e-mail.
 
 ---
 
-### Block 5: Vector autoregression models (VARs)
+### Block 5: Vector autoregression (VAR) models 
 
 + VAR models
 + Impulse-response functions (IRFs)  
@@ -71,7 +71,7 @@ Please note that lectures (pdf presentations) and seminar workfiles (R scripts) 
 
 ---
 
-#### Supporting materials & R help
+#### Support materials & R help
 
 - Install R/Rstudio at home: [R](https://www.r-project.org/) / [RStudio](https://www.rstudio.com/products/RStudio/)  
 - [stackoverflow](https://stackoverflow.com/tags/r/info)  
