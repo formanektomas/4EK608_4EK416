@@ -1,4 +1,5 @@
-# Advanced Econometrics 1 (4EK608) & Pokročilá ekonometrie 1 (4EK416)
+# Advanced Econometrics 1 (4EK608) 
+# Pokročilá ekonometrie 1 (4EK416)
 
 --- 
 
@@ -17,7 +18,7 @@ University of Economics, Prague
 
 ---
 
-**COVID 19 arrangements** 
+**COVID 19 arrangements for WS 2020/2021**  
 MS Teams groups will be established and students will be contacted/invited through their email addresses.
 
 ---
@@ -38,18 +39,16 @@ MS Teams groups will be established and students will be contacted/invited throu
 
 ---
 
-Please note that lectures (pdf presentations) and seminar workfiles (`R` scripts) can be updated without prior notice:  
+Please note that lectures (pdf presentations) and seminar workfiles (R scripts) can be updated without prior notice:  
 * clarifications, small edits and error corrections are made often,
-* as `R` packages are updated, syntax of different command and functions changes.
-
-
+* as R packages are updated, syntax of different command and functions changes.
 
 
 ---
 
 #### Supporting materials & R help
 
-- [R](https://www.r-project.org/) / [RStudio](https://www.rstudio.com/products/RStudio/)  
+- Install R/Rstudio at home: [R](https://www.r-project.org/) / [RStudio](https://www.rstudio.com/products/RStudio/)  
 - [stackoverflow](https://stackoverflow.com/tags/r/info)  
 
 ---
