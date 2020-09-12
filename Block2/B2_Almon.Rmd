@@ -1,0 +1,192 @@
+---
+title: "Polynomial distributed lags (PDL) example"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dyn)
+library(urca)
+library(dLagM)
+```
+
+***
+
+
+# Introduction
+
+
+* With FDLs, the number of estimated parameters may be a limiting factor.
+
+* For example, in model 
+
+* $y_t = \alpha + \beta_0 x_t + \beta_1 x_{t-1} + \beta_2 x_{t-2} + \dots + \beta_{12} x_{t-12} + u_t$,  `(1)`
+
+* we need to estimate 14 parameters and the regressors tend to be highly correlated.
+
+**Shirley Almon \& PDL models**
+
+* Often, simplifying assumptions can be made: $\beta_i = k_0 + k_1 i  + k_2  i^2 + \dots k_r  i^r$
+
+* 2nd order polynomials are commonly used for lag-weight distribution: $\beta_i = k_0 + k_1 i  + k_2  i^2$ `(2)`
+
+* By substituting for $\beta_i$ from `(2)` into `(1)` and re-arranging, we get:
+
+* $y_t = \alpha + k_0 (\sum_{i=0}^{12} x_{t-i}) + k_1 (\sum_{i=1}^{12} i\, x_{t-i}) + k_2 (\sum_{i=1}^{12} i^2 x_{t-i}) + u_t$
+
+* i.e. $y_t = \alpha + k_0 W_{0t} + k_1 W_{1t} + k_2 W_{2t} + u_t$
+
+* Now (after applying simplifying assumptions), we get to estimate 4 instead of 14 parameters.
+
+* The desired $\hat{\beta}_i$ estimates are then calculated from `(2)` using $\hat{k}_0, \hat{k}_1$ and $\hat{k}_2$,.
+
+* Almon-type PDL procedures (along with coefficent covariance matrix calculation) are implemented in `R` through the `{dLagM}` package.
+
+
+
+***
+
+# Empirical example
+
+***
+
+### Data: 
+
+For this example, we use `Raotbl3` dataset from the `{urca}` package.
+
+| Variable | Description                                                          |
+|----------|----------------------------------------------------------------------|
+| lc       |  Real consumption expenditures                                       |
+| li       |  Real income                                                         |
+
+`Raotbl3` is a data frame with quarterly observations from the United Kingdom, starting in 1966:4 until 1991:2, data are log-transformed.
+
+We assume that current consumption (`lc`) depends not only on current income (`li`) but on multiple lags of income - here, we take into account up to 12 lags (i.e. 3 years).
+
+
+```{r, echo=FALSE}
+Raotbl3 <- read.csv("Raotbl3.csv")
+Raotbl3.ts <- ts(Raotbl3, start = c(1966,4), frequency = 4)
+
+``` 
+
+Basic data plot:
+
+```{r}
+plot.ts(Raotbl3.ts[,c(1,2)],main="Raotbl3 data")
+```
+
+Both data series are $I(1)$ and assumed cointegrated 
+
+* In our simple example, we ignore important shocks present in the series, which affect the EG/PO cointegration test results (arguably, shocks are present at 1968Q2, 1979Q2 and 1988Q3). 
+
+***
+
+### Unrestricted FDL model
+
+First, we regress `lc` on `li` (for illustration, we use **lags 0 to 12**).
+
+No restrictions (lag-weights assumptions) on the lag distribution are imposed.
+
+
+```{r}
+Basic.model <- dyn$lm(lc ~ li + lag(li, -1) + lag(li, -2)
+                      + lag(li, -3) + lag(li, -4) + lag(li, -5)
+                      + lag(li, -6) + lag(li, -7) + lag(li, -8)
+                      + lag(li, -9) + lag(li, -10) + lag(li, -11)
+                      + lag(li, -12), data = Raotbl3.ts)
+summary(Basic.model)
+```
+
+In this model, multicolinearity is a major problem.
+
+* This may be clearly observed from correlation matrix of regressors - although such output *underestimates* the gravity of multicollinearity (we skip VIF calculation as it is unavailable for `dyn$lm` objects).
+
+```{r}
+# Pairwise correlations among regressors
+round(cor(Basic.model$model[,2:14]),2)
+```
+
+
+***
+
+### Almon-type PDL model using $2^{\textit{nd}}$ order polynomial lag-weights
+
+We can approximate the lag-weight distribution by a parabola ($2^{\textit{nd}}$ order polynomial). Also, we keep lags `0:12` as in the unrestricted model:
+
+
+```{r}
+#?polyDlm # uncomment to display help and syntax details
+Almon2 <- polyDlm(x=Raotbl3[,"li"], y=Raotbl3[,"lc"], q=12, k= 2, show.beta = T)
+```
+
+The $\beta_{t-p}$ lagged coefficients may be displayed by setting `show.beta = T`.
+
+
+The following results relate to the auxiliary regression (transformed model)
+
+```{r}
+summary(Almon2)
+```
+
+
+Given the assumptions applied, the lag-weight distribution of $\beta$ coefficiets now follows a parabola:
+
+```{r}
+plot(Almon2$beta.coefficients$beta~c(0:12), col="red", type="l")
+```
+
+For illustration purposes, we can show the ''observations'' of auxiliary variables $W_0$, $W_1$ and $W_2$
+
+(please note different notation used in `dLagM` package)
+
+```{r}
+# "observations" entering auxiliary regression
+# y.t is the dependent variable
+head(Almon2$model$model,10) 
+```
+
+
+***
+
+### Almon-type PDL model with linear decay
+
+```{r}
+# note the "k=1" argument -linear lag weights distribution-
+Almon1 <- polyDlm(x=Raotbl3[,"li"], y=Raotbl3[,"lc"], q=12, k= 1)
+summary(Almon1)
+plot(Almon1$beta.coefficients$beta~c(0:12), col="red", type="l")
+```
+
+***
+
+### Supervised work - Almon-type PDL model with cubic lag-weights
+
+```{r}
+# By analogy to previous two models, estimate Almon-type PDL
+# while assuming 3rd order polynomial in lag-weight distribution
+#
+# Estimate the model & print beta coefficients
+
+# Print out the auxiliary regression output
+
+# Plot lag-weight distribution
+
+# Bonus task: display the auxiliary variables W_0, ... , W_3.
+
+```
+
+
+
+
+### Additional topics not covered here
+
+Constrained lag shapes as in package `{dlsem}`
+
+* Almon's polynomial lag shape may show multiple modes and coefficients with different signs, thus entailing problems of interpretation. 
+
+* Constrained lag shapes (Judge et al., 1985, The Theory and Practice
+of Econometrics. John Wiley & Sons, 2nd ed., Chapters 9-10) overcome this issue.
+
+* For theoretical discussion and R examples, [see `{dlsem}` package vignette](https://cran.r-project.org/web/packages/dlsem/vignettes/dlsem_vignette.pdf).

@@ -1,0 +1,268 @@
+---
+title: "Dickey-Fuller and Augmented Dickey-Fuller tests in R, order of integration"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(ggplot2)
+library(urca)
+library(dyn)
+```
+
+***
+
+# Introduction
+
+### In this example, we show unit root tests (DF and ADF) in `R`.
+
+### Data: 
+```{r, echo=FALSE}
+phillips <- read.csv("phillips.csv")
+phillips <- phillips[1:49,] # We restrict the years to 1948-1996
+phillips$trend <- 1:49 # create a  time trend series
+phillips.ts <- ts(phillips, start = 1948, frequency = 1)
+phillips.zoo <- zoo(phillips.ts)
+``` 
+
+Plot of the inflation variable:
+
+```{r}
+ggplot(data = phillips.zoo, aes(x=obs, y=inf)) + geom_line()
+```
+
+***
+
+### Unit root testing
+
+For a time series $y_t$, the unit root test may be based on the formula:
+
+* $y_t = \rho y_{t-1} + e_t$
+
+*   $H_0: \rho = 1 \qquad$ i.e. unit root is present in the series, 
+*   $H_1: \rho < 1  \qquad$ i.e. $y_t$ is a weakly dependent series; $I(0)$
+
+### Dickey Fuller (DF) test: 
+
+* $y_t = \rho y_{t-1} + e_t$ is our TS of interest
+* subtract $y_{t-1}$ from both sides of the equation
+* $\Delta y_t  = (\rho - 1) y_{t-1} + e_t$
+* substitute $\theta=(\rho-1)$
+* $\Delta y_t  = \theta y_{t-1} + e_t$
+*   $H_0: \theta = 0 \qquad$ i.e. unit root is present in the series, 
+*   $H_1: \theta < 0  \qquad$ i.e. $y_t$ is a weakly dependent series; $I(0)$
+* use a $t$-ratio for testing $H_0: \theta = 0.$ 
+
+For the `inf` series, our equation $\Delta y_t  = \theta y_{t-1} + e_t$ can be estimated as follows:
+
+```{r}
+DF.1 <- dyn$lm(diff(inf) ~ lag(inf, -1)-1, data = phillips.zoo) 
+summary(DF.1)
+```
+
+From this estimation output, we may consider rejecting $H_0$ of U.R. in favour of weak stationarity at $\alpha = 5\,\%$.
+
+##### However, under $H_0$, $t$-ratios don't have a $t$-distribution, but follow a $DF$-distribution. 
+
+(-negative- critical values of the $DF$ distribution are much farther from zero)
+Critical values for the $DF$ distribution are available from statistical tables and implemented in most relevant SW packages.
+
+***
+
+### Dickey Fuller (DF) test in `R`, :
+
+
+#### Package `{urca}`, DF test, type "none"
+
+$$\Delta y_t  = \theta y_{t-1} + e_t$$
+```{r}
+# lags = 1 is the default value (i.e. ADF test is performed)
+# for DF test, we need to set lags to zero
+summary(ur.df(phillips.zoo$inf, lags=0, type="none"))
+```
+
+$\Delta y_t = \theta y_{t-1} + e_t$ 
+
+`tau1`: we test for $H_0: \theta = 0$ (unit root) 
+
+Interpretation for $\alpha = 5\,\%$:
+
+Because the test value `-2.0646` is more negative (father from zero) than the critical value `-1.95`, we reject $H_0$. 
+
+Before making conclusions towards the presence/absence of unit root, we should:
+
+* Test different dynamic specifications, i.e. include drift and trend in the test equation
+* Consider controlling for ar($p$) in $\Delta y_t$, i.e. use ADF test.
+
+
+***
+
+#### Package `{urca}`, DF test, type "drift"
+
+$$\Delta y_t  = \alpha + \theta y_{t-1} + e_t$$ 
+
+```{r}
+summary(ur.df(phillips.zoo$inf, lags=0, type="drift"))
+```
+
+$\Delta y_t = \alpha + \theta y_{t-1} + e_t$ 
+
+`tau2`: we test for $H_0: \theta = 0$ (unit root) 
+
+`phi1`: we test for joint hypothesis $H_0: \theta = \alpha = 0$ (unit root and no drift) 
+
+
+Interpretation for $\alpha = 5\,\%$:
+
+* `tau2`: Because the test value `-3.129` is more negative (father from zero) than the critical value `-2.93`, we reject $H_0$ (i.e. this tests suggest `inf` is $I(0)$.
+* `phi1`: Essentialy, this is an $F$-test. Because the test value `4.944` $>$ `4.86` (the critical value), we reject the joint $H_0$.
+
+
+***
+
+#### Package `{urca}`, DF test, type "trend"
+
+$$\Delta y_t  = \alpha + \theta y_{t-1} + \delta t + e_t$$ 
+
+```{r}
+summary(ur.df(phillips.zoo$inf, lags=0, type="trend"))
+```
+
+$\Delta y_t  = \alpha + \theta y_{t-1} + \delta t + e_t$ 
+
+`tau3`: we test for $H_0: \theta = 0$ (unit root) 
+
+`phi2`: we test for joint hypothesis $H_0: \theta = \alpha = \delta = 0$ (unit root, no drift and no trend).
+
+`phi3`: we test for joint hypothesis $H_0: \theta = \delta = 0$ (unit root and no trend).
+
+
+Interpretation for $\alpha = 5\,\%$:
+
+* As we allow for additional flexibility in the DGP, our conlusions change (even more flexibility & ADF tests will follow in next section).
+
+* `tau3`: Because the test value `-3.4488` is not father from zero than the critical value `-3.50`, we do not reject $H_0$ (test suggests `inf` has a unit root).
+* `phi2`: Because the test value `4.0313` $<$ `5.13` (the critical value), we do not reject the joint $H_0$ (test suggests `inf` is U.R. process and there is no drift nor trend).
+* `phi3`: Because the test value `5.9971` $<$ `6.73` (the critical value), we do not reject the joint $H_0$ (test suggests `inf` is a U.R. process without a trend).
+
+
+
+***
+
+#### Package `{urca}`, ADF test, type "trend"
+
+We only show the ADF test for the `trend` type, the remaining outputs may be interpreted by analogy (`tau1`, ... tests do not change).
+
+We choose to control for one lag in the dependent variable of the test equation (ad-hoc choice, see next section).
+
+
+
+$$\Delta y_t  = \alpha + \theta y_{t-1} + \delta t + \gamma_1 \Delta \, y_{t-1} + e_t$$ 
+
+```{r}
+summary(ur.df(phillips.zoo$inf, lags=1, type="trend"))
+```
+
+$\Delta y_t  = \alpha + \theta y_{t-1} + \delta t + \gamma_1 \Delta \, y_{t-1} + e_t$
+
+`tau3`: we test for $H_0: \theta = 0$ (unit root) 
+
+`phi2`: we test for joint hypothesis $H_0: \theta = \alpha = \delta = 0$ (unit root, no drift and no trend).
+
+`phi3`: we test for joint hypothesis $H_0: \theta = \delta = 0$ (unit root and no trend).
+
+
+Interpretation for $\alpha = 5\,\%$:
+
+
+* `tau3`: Because the test value `-2.9296` is not father from zero than the critical value `-3.50`, we do not reject $H_0$ (test suggests `inf` has a unit root).
+* `phi2`: Because the test value `3.0907` $<$ `5.13` (the critical value), we do not reject the joint $H_0$ (test suggests `inf` is U.R. process and there no drift nor trend).
+* `phi3`: Because the test value `4.5933` $<$ `6.73` (the critical value), we do not reject the joint $H_0$ (test suggests `inf` is a U.R. process without a trend).
+
+
+
+
+***
+
+#### Package `{urca}`, ADF test, type "trend"
+
+Generally, the  'best' number of lags in the dependent variable of the test equation ($\Delta \, y_{t-p}$) is unknown.
+
+One possible approach is to choose the number of lags using AIC statistics.
+
+* $\textit{AIC} = 2k - 2 \times \textit{logLik}$
+* $\textit{BIC} = \textit{log}(n) k - 2 \times \textit{logLik}$
+
+
+Lag selection in `R`:
+
+* `R` calculates multiple test equations that differ in the number of lags included.
+* Specification that minimizes the AIC is then used for U.R. test evaluation.
+
+We only show the ADF test for the `trend` type, the remaining outputs may be interpreted by analogy
+
+
+```{r}
+summary(ur.df(phillips.zoo$inf, selectlags = "AIC", type="trend"))
+```
+
+In this particular example, one lag is selected into the ADF test equation (same as output in previous section).
+
+
+
+***
+
+
+### Order of integration in a series
+
+* If the DF/ADF tests reject $H_0$ of a unit root, than we assume the series tested is weakly dependent, i.e. $I(0)$.
+
+* However, if $H_0$ is not rejected, 
+    - we assume our series is 'non-stationary' (actually, strongly dependent), 
+    - but we do not know the **order of integration** $I(d)$; 
+      i.e. how many times a series has to be differenced to obtain an $I(0)$ process.
+    
+
+##### **Order of integration:**
+
+* If 1st differnces of $y_t$, i.e. $\Delta y_t$, are stationary (when tested using ADF test), then $y_t$ $\, \sim I(1)$ ... because first differences are sufficient for `stationarity' (actually, weak dependency)
+
+* If 1st differnces of $y_t$ exhibit U.R., than $d>1$ and we need to difference further to determine $d$.
+
+* Please note that this type of analysis is highly sensitive to cyclic behavior, 'pulses' and prominent changes in the DGP (often, we 'clean' the data before testing or we use dedicated tests).
+
+
+***
+
+
+#### Series `inf` example continued: order of integration
+
+
+At $\alpha = 5\,\%$, we consider the `inf` series 'non-stationary', i.e. $I(d)$ with $d>0$.
+
+Therefore, we test 'stationarity' on first differences:
+
+We only show the ADF test for the `trend` type, the remaining outputs may be interpreted by analogy
+
+
+```{r}
+summary(ur.df(diff(phillips.zoo$inf), selectlags = "AIC", type="trend"))
+```
+
+For all test-types, $H_0$ is rejected and thus we assume that $\Delta \texttt{inf}$ is weakly dependent. 
+
+Hence, we may conclude that `inf` $\, \sim I(1)$.
+
+
+
+***
+
+### Additional topics not covered here
+
+* KPSS test for stationarity in `{tseries}` package  
+* Testing for unit roots in seasonal time series `{uroot}` package  
+* Testing for unit roots if the DGP has a structural break:  
+  Zivot & Andrews Unit Root Test `ur.za()` in `{urca}` package. [See Working paper for details.](https://mpra.ub.uni-muenchen.de/1797/1/MPRA_paper_1797.pdf)  
+* Panel unit root tests (will be discussed separately).  
