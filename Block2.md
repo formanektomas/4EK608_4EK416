@@ -53,3 +53,7 @@
 + **Phillips3.R**
     + Wooldridge 5th Edition,  Example 18.8,  Example 18.9,  Example 18.10  
     + Aim: Chow test, forecasting  
+
+---
+
+[Homepage](https://formanektomas.github.io/4EK608_4EK416/)
