@@ -1,0 +1,157 @@
+---
+title: "Monte Carlo simulation example"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lattice)
+library(lmtest)
+
+```
+
+***
+
+# Introduction
+
+**Monte Carlo simulation example**
+
+In this example, we compare the power of two tests for autocorrelation: 
+
+* Durbin-Watson 
+* Breusch-Godfrey
+
+We use two different specifications of a simulated linear regression for this purpose:
+
+$$ y_t = \beta_0 + \beta_1 t + u_t $$
+
+and
+
+$$ y_t = \beta_0 + \beta_1 y_{t-1} + u_t $$
+where the regression coefficients of the simulated model are: $\beta_0 = 0.25$ and $\beta_1 = -0.75$ for both our regression specifications (deterministic trend, dynamic model). $u_t$ is assumed stationary, with mean zero. 
+
+We want to evaluate the small-sample powers of the two tests ($\alpha = 0.05$) under the following scenarios:
+
+*  Autocorrelation: $\rho = 0, 0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 0.99$
+*  Sample size: $n = 15, 30, 50$.
+
+
+
+### Data: 
+
+For this Monte Carlo example, we need to define the DGP process first.
+
+```{r, echo=T}
+dgp <- function(nobs = 15, model = c("trend", "dynamic"),
+                corr = 0, coef = c(0.25, -0.75), sd = 1)
+{
+model <- match.arg(model)
+coef <- rep(coef, length.out = 2)
+err <- as.vector(filter(rnorm(nobs, sd = sd), corr, method = "recursive"))
+if(model == "trend") {
+   x <- 1:nobs
+   y <- coef[1] + coef[2] * x + err
+} else {
+   y <- rep(NA, nobs)
+   y[1] <- coef[1] + err[1]
+   for(i in 2:nobs)
+     y[i] <- coef[1] + coef[2] * y[i-1] + err[i]
+     x <- c(0, y[1:(nobs-1)])
+}
+return(data.frame(y = y, x = x))
+}
+``` 
+
+### Basic data plot:
+
+(one example of simulated data, $n=50$)
+
+```{r,echo=T}
+df1 <- dgp(model="trend", nobs = 50)
+plot(df1$y~df1$x,main="Trend")
+df2 <- dgp(model="dynamic", nobs = 50)
+plot(df2$y~df2$x,main="Dynamic")
+```
+
+***
+
+### Next, we define a function that evaluates test powers:
+
+
+```{r}
+simpower <- function(nrep = 100, size = 0.05, ...)
+{
+pval <- matrix(rep(NA, 2 * nrep), ncol = 2)
+colnames(pval) <- c("dwtest", "bgtest")
+for(i in 1:nrep) {
+  dat <- dgp(...)
+  pval[i,1] <- dwtest(y ~ x, data = dat,
+  alternative = "two.sided")$p.value
+  pval[i,2] <- bgtest(y ~ x, data = dat)$p.value
+}
+return(colMeans(pval < size))
+}                      
+```
+
+Higher precision of this function may be obtained by increasing the `nrep` argument. However, computation time may be a prohibitive factor here.
+
+
+***
+
+#### We prepare a function that does the actual Monte Carlo simulation task:
+```{r}
+simulation <- function(corr = c(0, 0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 0.99), 
+                       nobs = c(15, 30, 50), 
+                       model = c("trend", "dynamic"), ...)
+{
+prs <- expand.grid(corr = corr, nobs = nobs, model = model)
+nprs <- nrow(prs)
+pow <- matrix(rep(NA, 2 * nprs), ncol = 2)
+for(i in 1:nprs) pow[i,] <- simpower(corr = prs[i,1],
+   nobs = prs[i,2], model = as.character(prs[i,3]), ...)
+rval <- rbind(prs, prs)
+rval$test <- factor(rep(1:2, c(nprs, nprs)),
+labels = c("dwtest", "bgtest"))
+rval$power <- c(pow[,1], pow[,2])
+rval$nobs <- factor(rval$nobs)
+return(rval)
+}
+```
+
+***
+
+#### Now, we can run the simulation:
+
+```{r}
+set.seed(987)
+psim <- simulation()
+str(psim)
+```
+
+***
+
+#### Simulation output can be summarized and plotted:
+
+Test powers, i.e. $H_0$ rejection probabilities for increasing $\rho$ can be observed from the table and from plots:
+
+```{r}
+tab <- xtabs(power ~ corr + test + model + nobs, data = psim)
+ftable(tab, row.vars = c("model", "nobs", "test"), col.vars = "corr")
+xyplot(power ~ corr | model + nobs, groups = ~ test, data = psim, type = "b")
+```
+
+
+* Durbin-Watson test (blue) performs better in the trend model - the difference is only pronounced for smaller samples and lower $\rho$. 
+* In the dynamic model, Durbin-Watson test has almost no power except for
+very high correlations. 
+* Breusch-Godfrey test (pink) performs reasonably well, unless $n$ is very small.
+
+
+
+
+
+*** 
+
+* Example amended from the textbook Gentleman, Hornik, Parmigiani: Use R!
+* For detailed discussion see chapter 7 of [Use R!](https://link.springer.com/content/pdf/bfm%3A978-0-387-77318-6%2F1.pdf). 

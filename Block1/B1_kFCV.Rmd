@@ -1,0 +1,131 @@
+---
+title: "k-Fold Cross Validation example"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(cvTools)
+```
+
+***
+
+# Introduction
+
+**k-Fold Cross Validation**
+
+*  Can be efficiently used to estimate the test error associated with a given estimation method and/or 
+model specification - in order to evaluate its performance, or to select the appropriate level of flexibility. (Bias vs. Variance tradeoff)
+
+* Involves randomly dividing the set of observations into k groups, or folds, of approximately equal size. The first fold is treated as a validation set, and the method is fit on the remaining k - 1 folds. The mean squared error is then computed on the observations in the held-out fold. This procedure is repeated k times; each time, a different group of observations is treated as a validation set.
+
+*  Very general approach, can be applied to almost any statistical learning method (OLS, Logit, Ridge, Lasso, KNN, Principal Component Regression, etc.)
+
+### Data: 
+
+For this CS example, we use the common dataset `bwght` from Wooldridge: Introductory econometrics.
+
+```{r, echo=FALSE}
+BWGHT <- read.csv("bwght.csv")
+colnames(BWGHT)
+BWGHT$bwghtlbs <- NULL # remove redundant (perfectly collinear) information from dataframe
+BWGHT$packs <- NULL # remove redundant (perfectly collinear) information from dataframe
+``` 
+
+Basic data plot:
+
+```{r}
+plot(BWGHT[,c(1,4:7)])
+```
+
+***
+
+### Three simple linear models to be used for comparison:
+
+
+
+```{r}
+# Model estimation: three alternative specifications
+Model.1 <- lm(bwght ~ cigs+faminc, data=BWGHT)
+Model.2 <- lm(bwght ~ cigs+I(cigs^2)+faminc, data=BWGHT)
+Model.3 <- lm(bwght ~ cigs+faminc+parity+male, data=BWGHT)
+```
+
+#### Regression table outputs
+```{r}
+summary(Model.1)
+summary(Model.2)
+summary(Model.3)
+```
+
+
+***
+
+### kFCV
+
+Use `?cvFit` from the `{cvTools}` to familiarize with arguments to the `cvFit` function. The following settings are used here:
+
+* 5-folds for cross-validation, 
+* 100 repetitions of the whole kFCV procedure (i.e. variance and distribution of the $CV(k)$ statistic can be empirically evaluated),
+* default evaluation: using root mean squared prediction error:  `rtmspe`
+
+
+##### Model 1
+
+```{r}
+cv.Model.1 <- cvFit(Model.1, data = BWGHT, y = BWGHT$bwght, cost = rtmspe, 
+                    K = 5, R = 100, seed = 1234)
+cv.Model.1
+```
+
+
+##### Model 2
+
+```{r}
+cv.Model.2 <- cvFit(Model.2, data = BWGHT, y = BWGHT$bwght, cost = rtmspe, 
+                    K = 5, R = 100, seed = 1234)
+cv.Model.2
+```
+
+
+##### Model 3
+
+```{r}
+cv.Model.3 <- cvFit(Model.3, data = BWGHT, y = BWGHT$bwght, cost = rtmspe, 
+                    K = 5, R = 100, seed = 1234)
+cv.Model.3
+```
+
+
+
+***
+
+### Evaluation table and evaluation plot for k-fold CV output
+
+```{r}
+cvFits <- cvSelect(Model_1 = cv.Model.1, Model_2 = cv.Model.2, 
+                   Model_3 = cv.Model.3)
+cvFits
+summary(cvFits)
+
+```
+
+
+```{r}
+# different plot outputs are available - uncomment to display
+#   plot(cvFits, method = "bw")
+#   plot(cvFits, method = "xy")
+#   plot(cvFits, method = "dot")
+plot(cvFits, method = "density") 
+```
+
+
+
+
+
+### Additional topics 
+
+* kFCV in time series (Walk forward method ) not covered here
+* For detailed discussion of the `kFCV` topic, see e.g. [James et. al: Introduction to Statistical Learning with Applications in R](https://www-bcf.usc.edu/~gareth/ISL/) , chapter 5 (5.1)

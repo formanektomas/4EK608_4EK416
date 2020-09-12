@@ -1,0 +1,398 @@
+---
+title: "Partial/Marginal effects and their standard errors"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(ggplot2)
+library(lmtest)
+library(sandwich)
+library(margins)
+library(car)
+library(RcmdrMisc)
+```
+
+***
+
+# Introduction
+
+### In this example, we deal with effects of attendance on final exam performance
+
+A regression model is used to explain the outcome on a final exam (`stndfnl`, standardized observations) as a function of the following regressors: 
+
+* percentage of classes attended, 
+* prior college grade point average, 
+* ACT score (American College Testing).
+
+### Data: 
+```{r}
+attend <- load("attend.RData")
+print(desc)
+``` 
+
+***
+
+### Base model (no interactions)
+
+$$\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
++ \beta_2 \textit{priGPA}_i + \beta_3 \textit{ACT}_i + u_i$$
+
+
+```{r}
+lm1<-lm(stndfnl ~ atndrte + priGPA + ACT, data=data)
+summary(lm1)
+```
+
+The above standard errors come from the OLS estimation
+$$
+\textit{var}(\hat{\mathbf{\beta}})=\hat{\sigma}^2(\mathbf{X}^{\prime}\mathbf{X})^{-1}
+$$
+Different types of robust standard errors may be calculated, White's HC0 are given by:
+$$
+\textit{var}(\hat{\mathbf{\beta}})=(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}
+\mathbf{\hat{\,\Sigma \,}}
+[(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}]^{\prime}
+$$
+where $\mathbf{\hat{\Sigma}}$ is a diagonal matrix with $(i,i)$ elements equal to $\hat{u}_i^2$.
+
+```{r}
+coeftest(lm1, vcov = vcovHC(lm1, "HC0")) # White's HC0 robust errors
+``` 
+
+Here, given the linear nature of the model, the estimated $\hat{\beta}_1$ to $\hat{\beta}_3$ coefficients are:
+
+* the ceteris paribus marginal effects, valid regardless of magnitudes of other regressors
+* Average partial effects, APEs (average marginal effects)
+* Partial effects at the average, PEAs (marginal effects at the average)
+
+Standard errors $\textit{s.e.}(\hat{\beta}_j)$ are valid, regardless of observed regressor values (magnitudes).
+
+
+***
+
+### Model with interaction term: `atndrte * priGPA`
+
+This LRM may be outlined as:
+
+$$\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
++ \beta_2 \textit{priGPA}_i + \beta_3 \textit{ACT}_i  
++ \beta_4 (\textit{atndrte}_i \times \textit{priGPA}_i  ) + u_i$$
+
+
+```{r}
+lm2<-lm(stndfnl ~ atndrte + priGPA + ACT + atndrte:priGPA , data=data)
+summary(lm2)
+``` 
+
+
+Now, the partial effects of `atndrte`, `priGPA` and `ACT` are as follows:
+
+* $\frac{\partial \textit{stndfnl}}{\partial \textit{atndrte}_i} = \beta_1 + \beta_4 \textit{priGPA}_i$ 
+
+* $\frac{\partial \textit{stndfnl}}{\partial \textit{priGPA}_i} = \beta_2 + \beta_4 \textit{atndrte}_i$ 
+
+* $\frac{\partial \textit{stndfnl}}{\partial \textit{ACT}} = \beta_3$ 
+  
+
+#### Partial effects:  
+
+* $\textit{ACT}$: Interpretation of $\beta_3$ does not change from previous example (no interaction).
+
+* $\textit{atndrte}$: The partial effect on the dependent variable with respect to $\textit{atndrte}$ depends on the magnitude of $\textit{priGPA}$. 
+    - $\beta_1$ and $\textit{s.e.}(\hat{\beta}_1)$ are valid (directly applicable) only if $\textit{priGPA} =0$. Generally, this is not very useful.
+    - For any $\textit{priGPA} \neq 0$, the partial effect of $\textit{atndrte}$ is easy to calculate. However, standard error of the $\textit{atndrte}$ partial effect is not directly available here. 
+    - Reparametrization and Delta method may be used to get the s.e. (Bootstrap as well).
+
+
+
+* $\textit{priGPA}$: same situation as above, partial effects depend on the magnitude of the interacting element.
+
+
+***
+
+### Marginal effects - Reparametrization 
+
+Say, we are interested in partial effects and standard errors for a representative student with average `atndrte` and `priGPA` values. The effects can be calculated easily:
+
+```{r}
+m1 <- mean(data$atndrte)
+m2 <- mean(data$priGPA)
+m1 # mean(data$atndrte)
+m2 # mean(data$priGPA)
+``` 
+ 
+
+* $\frac{\Delta \textit{stndfnl}}{\Delta \textit{atndrte}_i} \doteq -0.021 + 0.011 \, \overline{\textit{priGPA}} = -0.021 + 0.011 \times 2.587 = 0.009$
+
+
+* $\frac{\Delta \textit{stndfnl}}{\Delta \textit{priGPA}_i} \doteq - 0.555 + 0.011 \, \overline{\textit{atndrte}} = - 0.555 + 0.011 \times 81.710 = 0.382$
+
+* Standard errors to these effects are available through reparametrization of the interaction term:
+  $([\textit{atndrte}_i - \overline{\textit{atndrte}} ] \times [\textit{priGPA}_i - \overline{\textit{priGPA}} ] )$
+
+* In the reparametrized model, $\beta_1$ is the effect of unit change in $\textit{atndrte}$ while $\textit{priGPA} =  \overline{\textit{priGPA}}$
+
+* $\beta_2$ can be interpreted by analogy (in the reparametrized model).
+
+```{r}
+lm3<-lm(stndfnl ~ atndrte + priGPA + ACT + I((atndrte-m1)*(priGPA-m2)) , data=data)
+summary(lm3)
+``` 
+
+
+
+***
+
+### Marginal effects using `{margins}` package
+
+Again, we are interested in partial effects and standard errors for a representative student with average `atndrte` and `priGPA` values. The effects can be calculated easily through `{margins}` package
+
+```{r}
+lm2<-lm(stndfnl ~ atndrte + priGPA + ACT + atndrte:priGPA , data=data) # repeated
+margins(lm2, at = list(atndrte = m1, priGPA = m2)) # see help for {margins} package
+``` 
+
+Standard errors are not yet implemented in `{margins}` for the `at=` argument. 
+
+---
+
+
+### Delta method - marginal effects & standard errors. 
+
+The easiest way to think of this is as a Taylor expansion, where the first term of a function is the mean, and the variance comes from the second order terms.  Specifically, if $g$ is a function of parameter $\beta$ and $\hat{\beta}$ is a consistent, normally distributed estimator for that parameter:
+$$
+g(\hat{\beta}) \approx g(\beta) + \nabla g(\beta)^\prime (\hat{\beta} - \beta)
+$$
+Since $\beta$ is a constant, and $\hat{\beta}$ is a consistent estimator for $\beta$, we can then say:
+$$
+\sqrt{n}\left(g(\hat{\beta})-g(\beta)\right)\,\xrightarrow{D}\,N\left(0, \nabla g(\beta)^\prime \cdot \mathbf{\Sigma}_{\hat{\beta}} \cdot \nabla g(\beta)\right)
+$$
+
+
+where $\hat{\beta}$ and $\Sigma_{\hat{\beta}}$ come from the OLS estimate and $g(\mathbf{\beta})$ is the marginal effect.
+
+---
+
+
+#### Emprical example 1, using `attend` data
+
+For our linear model
+
+$$\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
++ \beta_2 \textit{priGPA}_i + \beta_3 \textit{ACT}_i  
++ \beta_4 (\textit{atndrte}_i \times \textit{priGPA}_i  ) + u_i,$$
+
+
+
+Let's consider a unit change in `atndrte` (and fixing $\textit{priGPA}=\overline{\textit{priGPA}}$):
+
+* Marginal effect can be expressed as 
+$$
+g(\mathbf{\beta}) = \beta_1 + \beta_4 \overline{\textit{priGPA}}
+$$
+
+* If you take the gradient of this function (remember, a function of relevant *coefficients* not of regressors), it would be:
+$$
+\nabla g(\mathbf{\beta})^\prime = [1,\,\, \overline{\textit{priGPA}}]^{\,\prime} \,,
+$$
+
+* The matrix $\Sigma_{\hat{\beta}}$ comes from the OLS estimation of our main regression:
+
+$$
+\Sigma_{\hat{\beta}} = 
+\left[
+\begin{matrix}
+\textit{var}(\hat{\beta}_1) & \textit{cov}(\hat{\beta}_1,\hat{\beta}_4) \\
+\textit{cov}(\hat{\beta}_1,\hat{\beta}_4) & \textit{var}(\hat{\beta}_4)
+\end{matrix}\right]
+$$
+
+
+* Combining the above, the variance of $\hat{g} \equiv g(\hat{\beta})$ can be calculated using $\textit{var} (g) = \nabla g(\beta)^\prime \cdot \mathbf{\Sigma}_{\hat{\beta}} \cdot \nabla g(\beta)$, i.e. as:
+$$
+\textit{var}(\hat{g}) =
+[1,\,\, \overline{\textit{priGPA}}]
+\left[
+\begin{matrix}
+\textit{var}(\hat{\beta}_1) & \textit{cov}(\hat{\beta}_1,\hat{\beta}_4) \\
+\textit{cov}(\hat{\beta}_1,\hat{\beta}_4) & \textit{var}(\hat{\beta}_4)
+\end{matrix}\right]
+\left[
+\begin{matrix}
+1 \\
+\overline{\textit{priGPA}}
+\end{matrix}\right]
+$$
+
+
+Marginal effect a of unit change in `atndrte` (fixing priGPA at mean) can be calculated as follows:
+
+```{r}
+V <- vcov(lm2)
+V # Full VCV matrix for beta coeffs of our LM
+V1 <- V[c(2,5),c(2,5)]
+V1 # VCV extracted for beta1 and beta4
+g1 <- c(1, m2) # gradient
+g1 # show gradient (as row vector)
+VC1 <- t(g1) %*% V1 %*% g1
+sqrt(VC1) # s.e. of the marginal effect through delta metod. Compare to "Reparametrization"
+```
+
+
+---
+
+#### Emprical example 2, using `attend` data
+
+For a unit change in `priGPA` (and fixing $\textit{atndrte}=\overline{\textit{atndrte}}$):
+
+```{r}
+V <- vcov(lm2) # Full VCV, (repeated for clarity)
+V2 <- V[c(3,5),c(3,5)]  # (Sigma matrix for beta2 and beta4)
+g2 <- c(1, m1) # gradient
+VC2 <- t(g2) %*% V2 %*% g2
+sqrt(VC2) # compare to "Reparametrization"
+```
+
+
+--- 
+
+#### Emprical example 3, using `attend` data
+
+
+The previous two steps can be combined as follows:
+
+Let's define a matrix $\mathbf{G}=\{\partial g_i(\mathbf{\beta}) / \partial(\beta_j)\}$
+
+In our case (for marginal effects of the two interacting regressors): 
+
+$$
+\mathbf{G}=
+\left[
+\begin{matrix}
+1 & 0 & \overline{\textit{priGPA}} \\
+0 & 1 & \overline{\textit{atndrte}}
+\end{matrix}\right]
+$$
+
+Now, the variance of marginal effects can be estimated as 
+$$
+\textit{var}[g(\mathbf{\hat{\beta}})] = \mathbf{G} \,\,\mathbf{\Sigma}_{\hat{\beta}} \, \mathbf{G}^{\prime} \,,
+$$
+```{r}
+V <- vcov(lm2) # repeated
+V3 <- V[c(2,3,5),c(2,3,5)]
+G <- matrix(c(1,0,m2,0,1,m1), nrow=2,byrow = T)
+VCV <- G %*% V3 %*% t(G)
+sqrt(diag(VCV)) # compare to "Reparametrization"
+```
+
+
+
+
+***
+
+#### Delta method using the `{car}` and `{RcmdrMisc}` packages
+
+(Please note that `DeltaMethod()` in `{RcmdrMisc}` is a wrapper i.e. inteface to `deltaMethod()` from `{car}`)
+
+1) Effect of $\textit{atndrte}$ at $\textit{priGPA} = \overline{\textit{priGPA}}$: 
+
+   `DeltaMethod()` syntax is based on the first derivative of the regression function
+
+$$
+\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
++ \beta_2 \textit{priGPA}_i + \beta_3 \textit{ACT}_i  
++ \beta_4 (\textit{atndrte}_i \times \textit{priGPA}_i  ) + u_i
+$$
+
+  with respect to $\textit{atndrte}$:
+
+```{r}
+DeltaMethod(lm2,"(b1+b4*m2)")
+``` 
+
+2) For the effect of $\textit{priGPA}$ at $\textit{atndrte} = \overline{\textit{atndrte}}$:
+
+```{r}
+DeltaMethod(lm2,"(b2+b4*m1)")
+``` 
+
+
+***
+
+### APEs/AMEs using the `{margins}` package
+
+Here, we use our sample to estimate (population) the average/expected effect of changing a regressor by 1 unit (given observed covariates):
+
+$\textit{APE}_j = \frac{1}{n} \sum_{i=1}^{n} f(\boldsymbol{x}_i \boldsymbol{\hat{\beta}})\hat{\beta}_j$
+
+where $f(.)$ is $\frac{\partial y}{\partial x_j}$
+
+```{r}
+lm2<-lm(stndfnl ~ atndrte + priGPA + ACT + atndrte:priGPA , data=data) # repeated
+summary(margins(lm2))
+```
+
+
+***
+
+***
+
+# Supervised work:
+
+#### 1) We expand the `lm2` model to include $\textit{priGPA}^2$ and $\textit{ACT}^2$ as regressors:
+
+$$\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
++ \beta_2 \textit{priGPA}_i + \beta_3 \textit{ACT}_i  
++ \beta_4 \textit{priGPA}_i^2 + \beta_5 \textit{ACT}_i^2 
++ \beta_6 (\textit{atndrte}_i \times \textit{priGPA}_i  ) 
++ u_i$$
+
+##### Estimate the model
+
+```{r}
+# Fill-in and uncomment the following lines
+# lm4 <-lm(stndfnl ~ ... , data=data) 
+# summary(lm4)
+```
+
+##### Test $H_0: \beta_1 = \beta_6 = 0$
+```{r}
+# Fill-in and uncomment the following lines
+# ?linearHypothesis
+# linearHypothesis(lm4, ... )
+```
+
+For results verification, see Wooldridge, Introductory econometrics, Example 6.3
+
+
+#### 2) Use R (`DeltaMethod`) to calculate marginal effects and standard errors. Use mean values of all regressors as your "interesting" observations.
+
+```{r}
+# 
+m3 <- mean(data$ACT)
+# 
+# Effect and s.e. of atndrte
+#
+# Effect and s.e. of priGPA
+#
+# Effect and s.e. of ACT
+#
+```
+
+#### 3) Use R (`margins`) to calculate APEs of all regressors, interpret
+
+
+```{r}
+# APEs 
+# 
+```
+
+***
+
+
+For additional examples, see `margins`: [https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html](https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html).
+
