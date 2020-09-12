@@ -7,15 +7,15 @@
 
 ### R scripts for seminars - outline of Block 1
 
-**1) Attend.Rmd**  
+**1) Attend.Rmd**
 + [Wooldridge 5th Edition], Example 6.3  
 + Aim: repetition of models with CS data, interaction elements, marginal effects and their standard errors (reparametrization, Delta method).  
 
-**2) GMM_Estimation.R**  
+**2) GMM_Estimation.R**
 + based on: Wooldridge, Introductory Econometrics, (5th ed.) Example 10.9  
 + Aim:  MM estimation, GMM estimation of linear models  
 
-**3) MLE_Example.R**  
+**3) MLE_Example.R**
 + Aim: manual estimation of SLRM coefficients using MLE, illustrative example  
 
 **4) OLS_NLRM_Cons.R**  
