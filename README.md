@@ -33,7 +33,7 @@ MS Teams groups will be established and students will be invited by e-mail.
 
 + [Download presentation slides for Block 1](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.pdf)
 + [Download R scripts (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)  
-+ [Block 1 - seminar outline ](./Block1/README.html)
++ [Block 1 - seminar outline ](./Block1.html)
   
 ---
 
