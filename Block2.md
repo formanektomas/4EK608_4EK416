@@ -21,12 +21,25 @@
 + Wooldridge 5th Edition,  Example 18.2,  Example 18.6,  Example 18.7  
 + Aim: unit root tests, cointegration tests, ECM
 
+**5) Chow_test.R**  
++ Aim: Chow 1 test statistic  
 
+**6) Currency.R**
++ Aim: static and dynamic forecasts (follows EViews Illustrated, Chapter 8)  
 
+**7) Almon.Rmd**  
++ Aim: estimation of models containing PDLs
 
+**8)  Hseinv.R**  
++ Wooldridge 5th Edition,  Example 18.1  
++ Aim: Estimation of Distributed Lag (FDL and IDL), comparison of Koyck and RDL estimates
 
+**9) Phillips_AEH**
++ Wooldridge 5th Edition,  Example 11.5, amended  
++ Aim: adaptive expectations  
 
-
+**10) SriLanka.R**
++ PAM, AEH, Koyck, RDL
 
 
 --- 
@@ -36,3 +49,7 @@
 + **Barium.R**  
     + Wooldridge 5th Edition,  Example 10.5, Example 10.11, Example 12.3, Example 12.4.
     + Aim: repetition of event study, seasonal dummies, testing of serial correlation, FGLS in the case of serial correlation, Cochrane-Orcutt and Prais-Winsten transformation  
+
++ **Phillips3.R**
+    + Wooldridge 5th Edition,  Example 18.8,  Example 18.9,  Example 18.10  
+    + Aim: Chow test, forecasting  
