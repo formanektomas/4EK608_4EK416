@@ -1,7 +1,7 @@
 ## Block 1 presentation and R scripts  
 
 + [Download presentation slides for Block 1](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.pdf)
-+ [Download R scripts (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)
++ [Download R scripts for Block 1 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)
 
 --- 
 
