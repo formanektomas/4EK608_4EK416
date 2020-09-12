@@ -32,7 +32,7 @@ MS Teams groups will be established and students will be invited by e-mail.
 #### Materials for Block 1  
 
 + [Download presentation slides for Block 1](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.pdf)
-+ [Download R scripts (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)  
++ [Download R scripts for Block 1 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)  
 + [Block 1 - seminar outline ](./Block1.html)
   
 ---
@@ -43,6 +43,12 @@ MS Teams groups will be established and students will be invited by e-mail.
 + Error correction model (ECM)  
 + Distributed lag models, PAM, AEH  
 
+#### Materials for Block 2  
+
++ [Download presentation slides for Block 2](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block2/Block2.pdf)
++ [Download R scripts for Block 2 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block2/Block2.zip)  
++ [Block 2 - seminar outline ](./Block2.html)  
+  
 ---
 
 ### Block 3: Panel data models
