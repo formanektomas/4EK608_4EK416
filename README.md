@@ -81,7 +81,8 @@ Please note that lectures (pdf presentations) and seminar workfiles (R scripts) 
 #### Support materials & R help
 
 - Install R/Rstudio at home: [R](https://www.r-project.org/) / [RStudio](https://www.rstudio.com/products/RStudio/)  
-- [stackoverflow](https://stackoverflow.com/tags/r/info)  
+- Setup a convenient R working directory - eg. `RWD` folder on your desktop. [Instructions here](https://support.rstudio.com/hc/en-us/articles/200711843-Working-Directories-and-Workspaces)  
+- For help, you can use [stackoverflow](https://stackoverflow.com/tags/r/info) - note the `[r]` in the question box.  
 
 ---
 
