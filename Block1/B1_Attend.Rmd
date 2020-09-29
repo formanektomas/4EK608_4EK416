@@ -228,7 +228,7 @@ $$
 $$
 
 
-Marginal effect a of unit change in `atndrte` (fixing priGPA at mean) can be calculated as follows:
+Marginal effect & statistical inference of a unit change in `atndrte` (fixing priGPA at mean) can be calculated as follows:
 
 ```{r}
 V <- vcov(lm2)
