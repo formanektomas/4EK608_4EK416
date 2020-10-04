@@ -162,7 +162,18 @@ Standard errors are not yet implemented in `{margins}` for the `at=` argument.
 
 ### Delta method - marginal effects & standard errors. 
 
-The easiest way to think of this is as a Taylor expansion, where the first term of a function is the mean, and the variance comes from the second order terms.  Specifically, if $g$ is a function of parameter $\beta$ and $\hat{\beta}$ is a consistent, normally distributed estimator for that parameter:
+**Delta method intuition**  
+
+Consider a vector of estimated parameters $\hat{\mathbf{\beta}}$ and some function $\hat{g} = f(\hat{\mathbf{\beta}})$. Both $\hat{\mathbf{\beta}}$ and $\hat{g}$ are random variables and the variance of $\hat{g}$ is a function of variance of $\hat{\mathbf{\beta}}$. 
+
+1. If $g$ is a linear function of $\mathbf{\beta}$, say $g = \mathbf{\omega}^{\prime}\mathbf{\beta}$ then: $$ \text{var} (\hat{g}) = \mathbf{\omega}^{\prime} \text{var}(\hat{\mathbf{\beta}}) \mathbf{\omega}$$
+(recall how variance of fitted value $\hat{y}_i$ is calculated).  
+
+2. If $g$ is non-linear, variance of $\hat{g}$ can be approximated through a first-order Taylor expansion. 
+
+---
+
+Specifically, if $g$ is a function of parameter $\beta$ and $\hat{\beta}$ is a consistent, normally distributed estimator for that parameter:
 $$
 g(\hat{\beta}) \approx g(\beta) + \nabla g(\beta)^\prime (\hat{\beta} - \beta)
 $$
@@ -179,7 +190,9 @@ where $\hat{\beta}$ and $\Sigma_{\hat{\beta}}$ come from the OLS estimate and $g
 
 #### Emprical example 1, using `attend` data
 
-For our linear model
+In this exmple, we consider a *simple* Delta method example, as we only deal with linear functions of $\beta$.    
+
+For our linear model,  
 
 $$\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
 + \beta_2 \textit{priGPA}_i + \beta_3 \textit{ACT}_i  
@@ -187,9 +200,9 @@ $$\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
 
 
 
-Let's consider a unit change in `atndrte` (and fixing $\textit{priGPA}=\overline{\textit{priGPA}}$):
+Let's consider a unit change in `atndrte` (and fixing $\textit{priGPA}=\overline{\textit{priGPA}}$):  
 
-* Marginal effect can be expressed as 
+* Marginal effect can be expressed as a linear function (linear in parameters): 
 $$
 g(\mathbf{\beta}) = \beta_1 + \beta_4 \overline{\textit{priGPA}}
 $$
