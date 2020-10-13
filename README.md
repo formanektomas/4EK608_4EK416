@@ -35,6 +35,10 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download presentation slides for Block 1](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.pdf)
 + [Download R scripts for Block 1 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)  
 + [Block 1 - seminar outline ](./Block1.html)
+
+##### Self-study and supplementary materials  
++ [An Introduction to Statistical Learning, chapter 5 of the textbook](http://faculty.marshall.usc.edu/gareth-james/ISL/)  
++ [Video lectures for chapter 5 of the ISLR textbook](https://www.r-bloggers.com/2014/09/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/)
   
 ---
 
