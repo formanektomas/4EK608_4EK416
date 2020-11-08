@@ -40,9 +40,12 @@ ndiffs(currency$G, test = "adf")
 #
 # Potentially seasonal data, the following seasonal test does not work with NA values
 which(is.na(currency$G) == T)
-# 
-nsdiffs(currency$G[197:995], m=frequency(currency$G[197:995]), test = "ocsb")
+# currency[197,]
+G.ts <- ts(currency$G[197:995], start(1933,5), frequency = 12 )
+nsdiffs(G.ts, test="ocsb")
 # the above test is outside the scope of our course, see:
+# If test="ocsb", the Osborn-Chui-Smith-Birchenhall (1988) test is used 
+# (with null hypothesis that a seasonal unit root exists)
 #  http://users.metu.edu.tr/ceylan/STAT%20497_LN6.ppt
 #
 #
