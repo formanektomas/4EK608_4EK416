@@ -58,6 +58,17 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 
 ### Block 3: Panel data models
 
++ Panel data  
++ Short panels: estimators & testing  
++ Long panels: SURE  
++ Information on large panels and other panel-related topics  
+
+#### Materials for Block 3  
+
++ [Download presentation slides for Block 3](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block3/Block3.pdf)
++ [Download R scripts for Block 3 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block3/Block3.zip)  
++ [Block 3 - seminar outline ](./Block3.html)  
+
 ---
 
 ### Block 4: Simultaneous equations 
