@@ -11,6 +11,12 @@
 + Wooldridge 5th Edition, Example 13.8
 + Aim: FD estimator
 
+**2) FE_RE_wagepan.R**
++ Wooldridge 5th Edition, Example 14.2, 14.4
++ Aim: FE with time invariant regressors, comparison of Pooled OLS, FE and RE estimators, testing
+
+
+
 
 --- 
 
