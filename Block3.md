@@ -15,10 +15,13 @@
 + Wooldridge 5th Edition, Example 14.2, 14.4
 + Aim: FE with time invariant regressors, comparison of Pooled OLS, FE and RE estimators, testing
 
-
 **3) CRE_airfare.R**  
 + Wooldridge 5th Edition, Computer exercises for chapter 14 (C10, C14)  
 + Aim: Correlated Random Effects  
+
+**4) DynamicPanel.R**  
++ Based on `{plm}` sample data
++ Aim: Dynamic panels & Arellano-Bond estimator  
 
 
 ---
