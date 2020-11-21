@@ -61,7 +61,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + Panel data  
 + Short panels: estimators & testing  
 + Long panels: SURE  
-+ Information on large panels and other panel-related topics  
++ Introduction to large panels & corresponding estimators    
 
 #### Materials for Block 3  
 
