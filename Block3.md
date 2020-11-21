@@ -11,20 +11,14 @@
 + Wooldridge 5th Edition, Example 13.8
 + Aim: FD estimator
 
-**2) FE_RE_wagepan.R**
+**2) FE_RE_wagepan.R**  
 + Wooldridge 5th Edition, Example 14.2, 14.4
 + Aim: FE with time invariant regressors, comparison of Pooled OLS, FE and RE estimators, testing
 
 
-
-
---- 
-
-### Seminar & self-study R scripts for Block 3
-
-+ **Barium.R**  
-    + Wooldridge 5th Edition,  Example 10.5, Example 10.11, Example 12.3, Example 12.4.
-    + Aim: repetition of event study, seasonal dummies, testing of serial correlation, FGLS in the case of serial correlation, Cochrane-Orcutt and Prais-Winsten transformation  
+**3) CRE_airfare.R**  
++ Wooldridge 5th Edition, Computer exercises for chapter 14 (C10, C14)  
++ Aim: Correlated Random Effects  
 
 
 ---
