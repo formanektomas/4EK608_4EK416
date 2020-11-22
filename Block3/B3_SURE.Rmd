@@ -1,0 +1,386 @@
+---
+title: "SURE - SUR model estimator example"
+author: "4EK608 / 4EK416, Block 3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lmtest)
+library(plm)
+library(tidyverse)
+library(systemfit)
+library(broom)
+library(psych)
+data <- read.csv("F10_1.csv", sep = ";", header = TRUE)
+```
+
+---  
+
+## A Regional Production Model for Public Capital
+
++ Example amended from Greene, Econometric Analysis (7th ed., 8th ed.).  
++ Based on Munnell (1990) model of productivity of public capital at the state level (USA).  
++ The main equation of the analysis (a Cobb–Douglas production function):  
+
+$$
+\log \text{gsp}_{it} = \alpha_i + \beta_{1i} \log \text{pc}_{it} 
++ \beta_{2i} \log \text{hwy}_{it} + \beta_{3i} \log \text{water}_{it} 
++ \beta_{4i} \log \text{util}_{it} + \beta_{5i} \log \text{emp}_{it} 
++ \beta_{6i} \text{unemp}_{it} + \varepsilon_{it}
+$$
+where  
+
+* gsp      gross state product,  
+* pc       private capital,  
+* hwy      highway capital,  
+* water    water utility capital,  
+* util     utility capital,  
+* emp      employment (labor),  
+* unemp    unemployment rate.  
+
+Annual data for the contiguous 48 states (1970-1986) were combined into 9 regions:  
+(this corresponds to the *long panel* format)
+
+
+* `GF = c("AL", "FL", "LA", "MS")` - Gulf  
+* `SW = c("AZ", "NV", "NM", "TX", "UT")`- Southwest    
+* `WC = c("CA", "OR", "WA")` - West Coast   
+* `MT = c("CO", "ID", "MT", "ND", "SD", "WY")` - Mountain    
+* `NE = c("CT", "ME", "MA", "NH", "RI", "VT")` - New England   
+* `MA = c("DE", "MD", "NJ", "NY", "PA", "VA")` - Mid Atlantic    
+* `SO = c("GA", "NC", "SC", "TN", "WV", "AR")` - South   
+* `MW = c("IL", "IN", "KY", "MI", "MN", "OH", "WI")` - Midwest    
+* `CN = c("IA", "KS", "MO", "NE", "OK")` - Central   
+
+---  
+
+### Data description & visualization  
+
+
+Regions
+
+```{r, echo=F, message=F}
+# Define regions
+GF <- c("AL", "FL", "LA", "MS")
+SW <- c("AZ", "NV", "NM", "TX", "UT")
+WC <- c("CA", "OR", "WA")
+MT <- c("CO", "ID", "MT", "ND", "SD", "WY")
+NE <- c("CT", "ME", "MA", "NH", "RI", "VT")
+MA <- c("DE", "MD", "NJ", "NY", "PA", "VA")
+SO <- c("GA", "NC", "SC", "TN", "WV", "AR")
+MW <- c("IL", "IN", "KY", "MI", "MN", "OH", "WI")
+CN <- c("IA", "KS", "MO", "NE", "OK")
+# Generate region identificator (factor variable)
+data$region <- sapply(data$ST_ABB, function(x){
+  if(is.element(x, GF)){
+    "GF"
+  }else if(is.element(x, MW)){
+    "MW"
+  }else if(is.element(x, MA)){
+    "MA"
+  }else if(is.element(x, MT)){
+    "MT"
+  }else if(is.element(x, NE)){
+    "NE"
+  }else if(is.element(x, SO)){
+    "SO"
+  }else if(is.element(x, SW)){
+    "SW"
+  }else if(is.element(x, CN)){
+    "CN"
+  }else if(is.element(x, WC))
+    "WC"
+  }
+)
+data$region <- as.factor(data$region)
+# Aggregate data by regions
+data_agg <- data %>% 
+  group_by(region, YR) %>% 
+  summarize(
+    gsp = sum(GSP),
+    pc = sum(PC),
+    hwy = sum(HWY),
+    water = sum(WATER),
+    util = sum(UTIL),
+    emp = sum(EMP),
+    unemp = sum(EMP/sum(EMP)*UNEMP)) %>%  # weighted averages used, EMP used as weights
+  ungroup()
+
+```
+
+```{r, message=F}
+# Aggregated (i.e. into 9 regions) dataset structure:
+str(data_agg)
+
+ggplot(data_agg, aes(x=YR,y=log(gsp)))+ 
+  geom_point(aes(colour=region))+
+  ggtitle("gsp - gross state product")+
+  facet_wrap(~region, ncol=3, scales="free")+
+  geom_smooth(method= "lm", colour="blue")
+
+ggplot(data_agg, aes(x=unemp,y=gsp))+ 
+  geom_point(aes(colour=region))+
+  ggtitle("gsp vs unemployment (pairwise, not cet. part. interpretation)")+
+  facet_wrap(~region, ncol=3, scales="free")+
+  geom_smooth(method= "lm", colour="red")  
+```
+
+---  
+
+## Model estimation - *long panels*  
+### Alternative specifications & estimators)
+
+##### We start by OLS-estimating 2 different model setups (SURE used in the next step):  
+
+* **Basic pooled model:** we do OLS pooled regression with common coefficients for all equations, information on $\varepsilon_{it}$ contemporaneous covariances ignored). This is just a basic (reference) model.  
+
+* **Equation-by-equation estimates:** individual coefficients estimated by OLS for each equation, information on $\varepsilon_{it}$ contemporaneous covariances ignored).  
+
+##### Next, we assess the efficiency of a SUR/SURE model estimator
+
+* Calculate the variance-covariance matrix $\mathbf{\Sigma}$  
+* Based on the results, we evaluate if SUR model FGLS estimation is appropriate (**individual coefficients** for each equation, information on $\varepsilon_{it}$ **contemporaneous covariances used**). 
+
+
+---  
+
+### OLS estimate with restriction on common coefficients  
+
+**Basic pooled model** (no GLS/FGLS adjustment):  
+
+$$
+\begin{bmatrix}
+    \mathbf{y}_1 \\ \mathbf{y}_2 \\ \vdots \\ \mathbf{y}_M
+    \end{bmatrix} = 
+    \begin{bmatrix} 
+    \mathbf{X}_1 \\ \mathbf{X}_2 \\ \vdots \\ \mathbf{X}_M 
+    \end{bmatrix} \mathbf{\beta} + 
+    \begin{bmatrix}
+    \mathbf{\varepsilon}_1 \\ \mathbf{\varepsilon}_2 \\ \vdots \\ \mathbf{\varepsilon}_M
+    \end{bmatrix} = \mathbf{X\beta}+\mathbf{\varepsilon}
+$$
++ where $\mathbf{y}$ is $MT \times 1$ (MT = $9 \times 17 = 153$), $\mathbf{X}$ is $(MT \times K)$ and $\mathbf{\beta}$ is $(K \times 1)$.  
++ OLS estimator: $\mathbf{\hat{\beta}}=(\mathbf{X}^{\prime} \mathbf{X})^{-1} \mathbf{X}^{\prime} \mathbf{y}$  
+
+
+```{r}
+F1 <- log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp
+#
+# As we focus on the long-panel estimation approach,
+# we skip the usual TS-related model tests...
+OLS1 <- lm(F1,data_agg)
+summary(OLS1)
+logLik(OLS1)
+```
+
+---  
+
+### Equation-by-equation OLS
+
+The stacked-form regression model can be written as:  
+
+$$
+\begin{bmatrix}
+    \mathbf{y}_1 \\ \mathbf{y}_2 \\ \vdots \\ \mathbf{y}_9
+    \end{bmatrix} = 
+    \begin{bmatrix} 
+    \mathbf{X}_1 & \mathbf{0} & \cdots & \mathbf{0} \\ 
+    \mathbf{0} & \mathbf{X}_2 & \cdots & \mathbf{0} \\ 
+      &   & \vdots &  \\ 
+    \mathbf{0} & \mathbf{0} & \cdots & \mathbf{X}_9 \\ 
+    \end{bmatrix}
+    \begin{bmatrix}
+    \mathbf{\beta}_1 \\ \mathbf{\beta}_2 \\ \vdots \\ \mathbf{\beta}_9
+    \end{bmatrix} + 
+    \begin{bmatrix}
+    \mathbf{\varepsilon}_1 \\ \mathbf{\varepsilon}_2 \\ \vdots \\ \mathbf{\varepsilon}_9
+    \end{bmatrix} = \mathbf{X\beta}+\mathbf{\varepsilon}
+$$
+
+* Note that $\mathbf{\beta}$ is a $(MK \times 1)$ i.e. $(63 \times 1)$ vector.  
+* Separate equation-by-equation OLS is performed,  
+* $\mathbf{\hat{\beta}}_i=(\mathbf{X}_i^{\prime} \mathbf{X}_i)^{-1} \mathbf{X}_i^{\prime} \mathbf{y}_i$ for $i=1,2,\dots,9$.  
+
+#### Equation-by-equation OLS estimate (no GLS/FGLS adjustment):  
+* possible $\mathbf{\varepsilon}_i$ pairwise covariances (and variance) are ignored in the estimation.  
+
+```{r}
+fit <- data_agg %>% 
+  group_by(region) %>%
+  do(data.frame(tidy(lm(F1, data=.)))) # ?broom:::tidy()
+#
+as.data.frame(fit[1:63,1:6]) # .. see Table 10.1 (Greene, Econometric analysis, 7,8th ed.)
+```
+
+---  
+
+#### Covariance & correlation of OLS residuals from the equation-by-equation OLS:
+
+To see the efficiency of SUR model (FGLS) estimator, we compute contemporaneous covariances among model residuals:
+
++ $\mathbf{\hat{\Sigma}} = [\hat{\sigma}_{ij}]$  
++ where $\hat{\sigma}_{ij} = cov(\hat{\varepsilon}_{it} \hat{\varepsilon}_{jt})$.  
+
+```{r}
+# calculate residuals
+resid <- data_agg %>% 
+  group_by(region) %>%
+  do(model = lm(F1, data=.)) %>%
+  mutate(residuals1 = list((model)$residuals) ) %>% # return all resids for each region
+  ungroup()
+#
+# arrange residuals into a "wide-format" dataset (regions in columns)
+data_agg$residuals <- unlist(resid$residuals1)
+aux.DF <- as.data.frame(data_agg[,c("region","YR","residuals")])
+aux.DF2<- tidyr:::spread(aux.DF, key = "region", value = "residuals")
+#
+# variance-covariance matrix
+# .. note the complicated interpretation of covariances....
+round(cov(aux.DF2[,-1]),5) # 1st column contains YR...
+# For illustration purposes, see also:
+# contemporaneous correlations among residuals
+# .. can be reconciled to Table 10.2 (Greene, Econometric analysis, 8th ed.)
+# .. or to Example 10.1 (Greene, Econometric analysis, 7th ed.)
+cor.ci(aux.DF2[,-1])
+```
+
+
++ There is non-negligible information in the $\mathbf{\Sigma}$ matrix.  
++ Hence SUR model and SURE with GLS/FGLS may provide additional efficiency.  
+
+---  
+
+## SUR/SURE model and its estimators 
+
+```{r}
+# re-format data for use in the {systemfit} "SUR" estimator.
+# .. currently, this transformation is a necessary step for
+# .. proper {systemfit} functioning.
+pdata <- pdata.frame(data_agg, c("region","YR"))
+class(pdata)
+# str(pdata) # uncomemnt to view pdata.frame structure
+```
+
+
+### SUR/SURE estimator (FGLS) of the pooled model  
+
+
+* Model specification (repeated):
+
+$$
+\begin{bmatrix}
+    \mathbf{y}_1 \\ \mathbf{y}_2 \\ \vdots \\ \mathbf{y}_M
+    \end{bmatrix} = 
+    \begin{bmatrix} 
+    \mathbf{X}_1 \\ \mathbf{X}_2 \\ \vdots \\ \mathbf{X}_M 
+    \end{bmatrix} \mathbf{\beta} + 
+    \begin{bmatrix}
+    \mathbf{\varepsilon}_1 \\ \mathbf{\varepsilon}_2 \\ \vdots \\ \mathbf{\varepsilon}_M
+    \end{bmatrix} = \mathbf{X\beta}+\mathbf{\varepsilon}
+$$
+* $\mathbf{X}$ is $(MT \times K)$ and $\mathbf{\beta}$ is $(K \times 1)$.
+
+* $\mathbf{\hat{\beta}}_{\text{FGLS}} = [\mathbf{X}^{\prime} (\hat{\mathbf{\Sigma}} \otimes \mathbf{I}_T)^{-1} \mathbf{X}]^{-1} \mathbf{X}^{\prime} (\hat{\mathbf{\Sigma}} \otimes \mathbf{I}_T)^{-1} \mathbf{y}$
+
+---- 
+
+#### SURE (FGLS) of the pooled model: 
+
+```{r}
+#
+# Model formula (repeated)
+# F1 <- log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp
+#
+# Pooled model (common beta vector, FGLS is used)
+F10.2.pooled <- systemfit(F1, method = "SUR", data=pdata, pooled=T)
+# .. see Tables in Example 10.1 (Greene, Econometric analysis, 7,8th ed.)
+#   .. note: with `data=data_agg` /not the panel.data.frame/,
+#   .. we get the pooled OLS results
+summary(F10.2.pooled, residCov=F) 
+```
+
+
+### FGLS estimator for the general SURE/SUR model  
+
+* Model specification (repeated):  
+
+$$
+\begin{bmatrix}
+    \mathbf{y}_1 \\ \mathbf{y}_2 \\ \vdots \\ \mathbf{y}_9
+    \end{bmatrix} = 
+    \begin{bmatrix} 
+    \mathbf{X}_1 & \mathbf{0} & \cdots & \mathbf{0} \\ 
+    \mathbf{0} & \mathbf{X}_2 & \cdots & \mathbf{0} \\ 
+      &   & \vdots &  \\ 
+    \mathbf{0} & \mathbf{0} & \cdots & \mathbf{X}_9 \\ 
+    \end{bmatrix}
+    \begin{bmatrix}
+    \mathbf{\beta}_1 \\ \mathbf{\beta}_2 \\ \vdots \\ \mathbf{\beta}_9
+    \end{bmatrix} + 
+    \begin{bmatrix}
+    \mathbf{\varepsilon}_1 \\ \mathbf{\varepsilon}_2 \\ \vdots \\ \mathbf{\varepsilon}_9
+    \end{bmatrix} = \mathbf{X\beta}+\mathbf{\varepsilon}
+$$
+
+* $\mathbf{X}$ is $(MT \times MK)$ and $\mathbf{\beta}$ is $(MK \times 1)$.
+
+* $\mathbf{\hat{\beta}}_{\text{FGLS}} = [\mathbf{X}^{\prime} (\hat{\mathbf{\Sigma}} \otimes \mathbf{I}_T)^{-1} \mathbf{X}]^{-1} \mathbf{X}^{\prime} (\hat{\mathbf{\Sigma}} \otimes \mathbf{I}_T)^{-1} \mathbf{y}$  
+
+* note that the matrix form of the FGLS remains unchanged for both $\mathbf{X}$ setups.  
+
+--- 
+
+#### SURE (FGLS) of the general long-panel model: 
+
+```{r}
+#
+# (individual beta vectors for each equation, FGLS)
+F10.1.SUR <- systemfit(F1, method = "SUR", data=pdata)
+summary(F10.1.SUR, residCov=F) # .. see Example 10.1 (Greene, Econometric analysis, 7,8th ed.)
+```
+
+---  
+
+#### Finally, we compare the "pooled" and general SUR/SURE models  
+(i.e. we test the pooling restrictions):
+
+```{r}
+#
+# LR test for common beta vector restriction:
+lrtest(F10.2.pooled,F10.1.SUR)
+```
+
+--- 
+
+##  Supervised work: apply SUR model estimator to the "Grunfeld" dataset
+
+```{r}
+data("Grunfeld", package="plm")
+# ?Grunfeld
+class(Grunfeld) 
+str(Grunfeld) 
+```
+
+#### Supervised work tasks:
+
+1. Convert `Grunfeld` to `pdata.frame` format.  
+
+2. Estimate `inv ~ value + capital` using a pooled OLS approach.  
+
+3. Perform equation-by-equation OLS estimation for each of the 10 companies.  
+4. Assess contemporaneous covariance/correlation of residuals from step (3).  
+4. Estimate the pooled SUR model with restricted (identical) beta parameters, use FGLS.  
+
+5. Estimate a general-form SUR model, use FGLS.  
+
+6. Evaluate the validity of restrictions placed in step (4).  
+
+
+--- 
+
+
+
+
+
+
