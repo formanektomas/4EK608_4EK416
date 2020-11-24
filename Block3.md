@@ -23,6 +23,10 @@
 + Based on `{plm}` sample data
 + Aim: Dynamic panels & Arellano-Bond estimator  
 
+**5) SURE.Rmd**  
++ Greene, Econometric Analysis (7th ed., 8th ed.), Example 10.1
++ Aim: Long panels and the SURE approach  
+
 
 ---
 
