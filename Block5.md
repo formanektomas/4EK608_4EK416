@@ -23,8 +23,8 @@
 ### Seminar & self-study R scripts for Block 5
 
 + **var1.R**  
-    + EViews User Guide, selected topics from Chapter 18, Vector Autoregression and Error Correction Models, 
-    + Aim: VARs & IRFs - using non-stationary vs. stationary data
+    + EViews User Guide, selected topics from Chapter 18, Vector Autoregression and Error Correction Models,  
+    + Aim: VARs & IRFs - using non-stationary vs. stationary data  
 ---
 
 [Homepage](https://formanektomas.github.io/4EK608_4EK416/)
