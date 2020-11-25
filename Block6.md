@@ -1,5 +1,8 @@
 ## Block 6 presentation and R scripts  
 
+Repetition from BSc. courses
+Intended for self-study and preparation for the state exam
+
 + [Download presentation slides for Block 6](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block6/Block6.pdf)
 + [Download R scripts for Block 6 (zip) ](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block6/Block6.zip)
 
