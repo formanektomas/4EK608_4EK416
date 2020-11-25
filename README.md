@@ -97,7 +97,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 
 ### Block 6: Limited dependent variables (LDVs) - repetition from BSc. courses
 
-Not in the syllabus of 4EK416 / 4EK608 course (topic moved to BSc. courses)
+Not in the syllabus of 4EK416 / 4EK608 course (topic moved to BSc. courses)  
 Material intended for self-study and preparation for state exams
 
 + Binary dependent variables  
