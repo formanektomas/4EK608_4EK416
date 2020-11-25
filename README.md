@@ -71,11 +71,15 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 
 ---
 
-### Block 4: Simultaneous equations 
+### Block 4: Instrumental variable regression and simultaneous equation models
 
 + Instrumental variables, IVR  
 + Identification  
 + Simultaneous equation models (SEMs)  
+
+#### Materials for Block 4  
+
++ [Download presentation slides for Block 4](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.pdf)  
 
 ---
 
@@ -84,6 +88,26 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + VAR models
 + Impulse-response functions (IRFs)  
 + Vector error correction models (VECMs)  
+
+#### Materials for Block 5  
+
++ [Download presentation slides for Block 5](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block5/Block5.pdf)  
+
+---
+
+### Block 6: Limited dependent variables (LDVs) - repetition from BSc. courses
+
+Not in the syllabus of 4EK416 / 4EK608 course (topic moved to BSc. courses)
+Material intended for self-study and preparation for state exams
+
++ Binary dependent variables  
++ Count dependent variables  
++ Multinomial dependent variables (unordered, ordered)  
++ Other types of LDVs (corner solution, censored, truncated data)  
+
+#### Materials for Block 6  
+
++ [Download presentation slides for Block 6](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block6/Block6.pdf)  
 
 ---
 
