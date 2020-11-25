@@ -108,8 +108,11 @@ Material intended for self-study and preparation for state exams
 #### Materials for Block 6  
 
 + [Download presentation slides for Block 6](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block6/Block6.pdf)  
++ [Download R scripts for Block 6 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block6/Block6.zip)  
++ [Block 6 - seminar outline ](./Block6.html)  
 
----
+---  
+---  
 
 Please note that lectures (pdf presentations) and seminar workfiles (R scripts) can be updated without prior notice:  
 * clarifications, small edits and error corrections are made often,
