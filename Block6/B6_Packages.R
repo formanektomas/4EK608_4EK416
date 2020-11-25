@@ -1,6 +1,6 @@
 ###################################
 # 4EK608 - Advanced Econometrics  #
-# R packages required for Week 11 #
+# R packages required for Block 6 #
 ###################################
 #
 install.packages("car", dependencies = T)
