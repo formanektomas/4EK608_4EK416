@@ -68,7 +68,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download presentation slides for Block 3](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block3/Block3.pdf)
 + [Download R scripts for Block 3 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block3/Block3.zip)  
 + [Block 3 - seminar outline ](./Block3.html)  
-
+  
 ---
 
 ### Block 4: Instrumental variable regression and simultaneous equation models
@@ -82,6 +82,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download presentation slides for Block 4](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.pdf)  
 + [Download R scripts for Block 4 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.zip)  
 + [Block 4 - seminar outline ](./Block4.html)  
+  
 ---
 
 ### Block 5: Vector autoregression (VAR) models 
