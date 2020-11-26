@@ -27,7 +27,7 @@ Grading scale
     + If you miss a midterm test (properly reported medical absence only), there will be a special term during the 13th week.
     + **COVID19:** instructions will be updated if we have to switch from in-class to on-line lectures & seminars.
 
-+ Final exam - three dates during the exam period: dates will be announced (see InSIS)
++ Final exam - multiple dates during the exam period: see InSIS  
 
 ---
 
