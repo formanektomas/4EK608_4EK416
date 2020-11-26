@@ -80,7 +80,8 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 #### Materials for Block 4  
 
 + [Download presentation slides for Block 4](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.pdf)  
-
++ [Download R scripts for Block 4 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.zip)  
++ [Block 4 - seminar outline ](./Block4.html)  
 ---
 
 ### Block 5: Vector autoregression (VAR) models 
