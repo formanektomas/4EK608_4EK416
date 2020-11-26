@@ -13,8 +13,9 @@ University of Economics, Prague
 
 ### Requirements and classification
 
-+ [Detailed information provided here](./CourseClassification.html)
-+ [Literature and other supporting materials for the course](./LiteratureSupport.html)
++ [Detailed information provided here](./CourseClassification.html)  
++ [Literature and other supporting materials for the course](./LiteratureSupport.html)  
++ [Final exam topics](./FinalExam.html)  
 
 ---
 
