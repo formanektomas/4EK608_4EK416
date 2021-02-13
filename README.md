@@ -37,9 +37,11 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download R scripts for Block 1 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)  
 + [Block 1 - seminar outline ](./Block1.html)
 
-##### Self-study and supplementary materials  
+#### Reading, self-study and supplementary materials  
++ Wooldridge, J.: Introductory econometrics, 6th ed.: Appendices C-1 to C-4. (basic topics)  
++ Greene, W.: Econometric analysis, 7th ed., 8th ed. : Part III Estimation Methodology (text covers multiple advanced topics that are outside the syllabus of our coursse).  
 + [An Introduction to Statistical Learning, chapter 5 of the textbook](http://faculty.marshall.usc.edu/gareth-james/ISL/)  
-+ [Video lectures for chapter 5 of the ISLR textbook](https://www.r-bloggers.com/2014/09/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/)
++ [Video lectures for chapter 5 of the ISLR textbook](https://www.r-bloggers.com/2014/09/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/)  
   
 ---
 
