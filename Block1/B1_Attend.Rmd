@@ -46,10 +46,10 @@ lm1<-lm(stndfnl ~ atndrte + priGPA + ACT, data=data)
 summary(lm1)
 ```
 
-The above standard errors come from the OLS estimation
+The above standard errors come from the OLS estimation of variance-covariance matrix of estimated parameters:
 $$
-\textit{var}(\hat{\mathbf{\beta}})=\hat{\sigma}^2(\mathbf{X}^{\prime}\mathbf{X})^{-1}
-$$
+\textit{var}(\hat{\mathbf{\beta}})=\hat{\sigma}^2(\mathbf{X}^{\prime}\mathbf{X})^{-1}.
+$$  
 Different types of robust standard errors may be calculated, White's HC0 are given by:
 $$
 \textit{var}(\hat{\mathbf{\beta}})=(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}
@@ -324,13 +324,13 @@ $$
   with respect to $\textit{atndrte}$:
 
 ```{r}
-DeltaMethod(lm2,"(b1+b4*m2)")
+DeltaMethod(lm2,"(b1+b4*m2)") # m2 is the average value of priGPA
 ``` 
 
 2) For the effect of $\textit{priGPA}$ at $\textit{atndrte} = \overline{\textit{atndrte}}$:
 
 ```{r}
-DeltaMethod(lm2,"(b2+b4*m1)")
+DeltaMethod(lm2,"(b2+b4*m1)")# m1 is the average value of atndrte
 ``` 
 
 
