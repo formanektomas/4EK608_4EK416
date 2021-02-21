@@ -39,31 +39,31 @@ dnorm(10, mean=0, sd=1) # density (pdf)
 #
 ## [3b] Log-Likelihood function of the linear model: y = beta0 + beta1*X + u
 #
-ols.lf <- function(theta, y, X) {
+lm_lf <- function(theta, y, X) {
   sum(dnorm(y, mean = X %*% theta[-3], sd = theta[3], log = TRUE))
 }
 #
 # [4] Experiments with the LF
 #
-cat("Evaluating LogL at very inacurate parameters theta : ", ols.lf(c(4,5,6), y, X), "\n")
-cat("Evaluating LogL for a somewhat better theta : ", ols.lf(c(2.5,2,1.5), y, X), "\n")
-cat("Evaluating LogL at true params  : ", ols.lf(theta.true, y, X), "\n")
-cat("Evaluating LogL at OLS estimates: ", ols.lf(theta.ols, y, X), "\n")
+cat("Evaluating LogL at very inacurate parameters theta : ", lm_lf(c(4,5,6), y, X), "\n")
+cat("Evaluating LogL for a somewhat better theta : ", lm_lf(c(2.5,2,1.5), y, X), "\n")
+cat("Evaluating LogL at true params  : ", lm_lf(theta.true, y, X), "\n")
+cat("Evaluating LogL at OLS estimates: ", lm_lf(theta.ols, y, X), "\n")
 # Discuss: why is the OLS-based logLik higher than logLik for the true theta?
 #
 #
-## [5] Use MLE for parameter estimation / likelihood function ols.lf() is used /
+## [5] Use MLE for parameter estimation / likelihood function lm_lf() is used /
 #
 ?optim
 # 
 optim(c(5,5,5),                          # Inaccurate starting values (Intercept, slope, sigma), optimized over all parameters...
-      ols.lf,                            # Likelihood function
-      control=list(trace=1, fnscale=-1), # See ?optim for all controls; fnscale=-1 for maximization...
-      y=y, X=X   )                       # "..." stuff into ols.lf()
+      lm_lf,                            # Likelihood function
+      control=list(trace=1, fnscale=-1), # trace: progress info; fnscale=-1 for maximization...
+      y=y, X=X   )                       # "..." inserted into lm_lf()
 # 
 # optimization repeated and saved into an object for comparison.
 MLE.est <- optim(c(5,5,5),                           
-                 ols.lf,                             
+                 lm_lf,                             
                  control=list(trace=1, fnscale=-1),  
                  y=y, X=X )                          
 #
