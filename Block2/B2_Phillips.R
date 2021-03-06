@@ -73,6 +73,9 @@ summary(lm.11.19) # note the deletion due to missigness for row 1...
 # mu = beta0 / (- beta1)
 lm.11.19$coefficients[1]/(-1*lm.11.19$coefficients[2])
 #
+# Reliability of the estimated natural rate of unemployment
+library(RcmdrMisc)
+DeltaMethod(lm.11.19,"b0/-b1")
 #
 #
 #
