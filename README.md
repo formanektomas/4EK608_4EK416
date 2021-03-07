@@ -56,7 +56,12 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download presentation slides for Block 2](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block2/Block2.pdf)
 + [Download R scripts for Block 2 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block2/Block2.zip)  
 + [Block 2 - seminar outline ](./Block2.html)  
-  
+
+#### Reading, self-study and supplementary materials  
++ Wooldridge, J.: Introductory econometrics, 6th ed.: Part 2: Regression Analysis with Time Series Data, ch.10-ch.12. (basic topics) 
++ Wooldridge, J.: Introductory econometrics, 6th ed.: chapter 18.     
++ Zivot, E., Wang, J.: Modelling Financial Time Series with S-PLUS, 2nd ed.: chapters 3,4,6 and 12.  
+    
 ---
 
 ### Block 3: Panel data models
