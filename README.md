@@ -76,7 +76,12 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download presentation slides for Block 3](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block3/Block3.pdf)
 + [Download R scripts for Block 3 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block3/Block3.zip)  
 + [Block 3 - seminar outline ](./Block3.html)  
-  
+ 
+#### Reading, self-study and supplementary materials  
++ Wooldridge, J.: Introductory econometrics, 6th ed.: Part 3, ch.13 and ch.14. (basic topics)  
++ Greene, W.: Econometric analysis, 7th ed., 8th ed. : ch. 11 - Models for panel data    
++ [PhD-level course on panel data from NYU](http://people.stern.nyu.edu/wgreene/Econometrics/PanelDataEconometrics.htm)  
+
 ---
 
 ### Block 4: Instrumental variable regression and simultaneous equation models
