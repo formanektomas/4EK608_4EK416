@@ -52,11 +52,12 @@ $$
 $$  
 Different types of robust standard errors may be calculated, White's HC0 are given by:
 $$
-\textit{var}(\hat{\mathbf{\beta}})=(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}
-\mathbf{\hat{\,\Sigma \,}}
+\textit{var}(\hat{\mathbf{\beta}})= 
+\mathbf{\hat{\,\Sigma \,}} = [(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}]
+\mathbf{\hat{\,\Omega \,}}
 [(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}]^{\prime}
 $$
-where $\mathbf{\hat{\Sigma}}$ is a diagonal matrix with $(i,i)$ elements equal to $\hat{u}_i^2$.
+where $\mathbf{\hat{\Omega}}$ is a diagonal matrix with $(i,i)$ elements equal to $\hat{u}_i^2$.
 
 ```{r}
 coeftest(lm1, vcov = vcovHC(lm1, "HC0")) # White's HC0 robust errors
