@@ -22,9 +22,6 @@ layout: default
 + [stackoverflow R](https://stackoverflow.com/tags/r/info).  
 + [CrossValidated](https://stats.stackexchange.com/).  
 
---- 
-
-[Old website for the course (no longer updated)](https://sites.google.com/site/econometricsvse/advanced-econometrics) 
 
 --- 
 
