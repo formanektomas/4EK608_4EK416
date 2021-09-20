@@ -1,0 +1,89 @@
+---
+title: "Partial/Marginal effects and their standard errors"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(knitr)
+require(ggplot2)
+require(lmtest)
+require(sandwich)
+require(margins)
+require(car)
+require(RcmdrMisc)
+```
+
+
+### Data: 
+```{r}
+attend <- load("attend.RData")
+print(desc)
+m1 <- mean(data$atndrte)
+m2 <- mean(data$priGPA)
+m1 # mean(data$atndrte)
+m2 # mean(data$priGPA)
+``` 
+ 
+
+***
+
+# Supervised work:
+
+#### 1) We expand the `lm2` model to include $\textit{priGPA}^2$ and $\textit{ACT}^2$ as regressors:
+
+$$\textit{stndfnl}_{\,i} = \beta_0 + \beta_1 \textit{atndrte}_i
++ \beta_2 \textit{priGPA}_i + \beta_3 \textit{ACT}_i  
++ \beta_4 \textit{priGPA}_i^2 + \beta_5 \textit{ACT}_i^2 
++ \beta_6 (\textit{atndrte}_i \times \textit{priGPA}_i  ) 
++ u_i$$
+
+##### Estimate the model
+
+```{r}
+# Fill-in and uncomment the following lines
+lm4<-lm(stndfnl ~ atndrte + priGPA + ACT +I(priGPA^2) + I(ACT^2) + atndrte:priGPA, data=data) # repeated
+summary(lm4)
+```
+
+##### Test $H_0: \beta_1 = \beta_6 = 0$
+```{r}
+# Fill-in and uncomment the following lines
+# ?linearHypothesis
+linearHypothesis(lm4, c("atndrte = 0", "atndrte:priGPA =0") )
+```
+
+For results verification, see Wooldridge, Introductory econometrics, Example 6.3
+
+
+#### 2) Use R (`DeltaMethod`) to calculate marginal effects and standard errors. Use mean values of all regressors as your "interesting" observations.
+
+```{r}
+# 
+m3 <- mean(data$ACT)
+# 
+# Effect and s.e. of atndrte
+DeltaMethod(lm4,"(b1+b6*m2)")
+#
+# Effect and s.e. of priGPA
+DeltaMethod(lm4,"(b2+2*b4*m2+b6*m1)")
+#
+# Effect and s.e. of ACT
+DeltaMethod(lm4,"(b3+2*b5*m3)")
+#
+```
+
+#### 3) Use R (`margins`) to calculate APEs of all regressors, interpret
+
+
+```{r}
+# APEs 
+summary(margins(lm4))
+```
+
+***
+
+
+For additional examples, see `margins`: [https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html](https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html).
+
