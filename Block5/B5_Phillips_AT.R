@@ -38,7 +38,7 @@
 #
 #
 #
-require(zoo)
+library(zoo)
 rm(list=ls())
 Austria.data <- read.csv("Phillips_AT.csv")
 Austria.ts <- ts(Austria.data, start=c(2004,1), frequency = 4)
@@ -58,7 +58,7 @@ par(mfrow = c(1,1))
 #
 # STEP 1: Stationariry evaluation
 #
-require(tseries) #install.packages("tseries")
+library(tseries) #install.packages("tseries")
 # ADF tests for level values
 adf.test(AUT.zoo[,"PPI_GAP_AT"], alternative ="stationary", k=1)
 adf.test(AUT.zoo[,"U_GAP_AT"], alternative ="stationary", k=1)
@@ -88,13 +88,13 @@ colnames(exog.m) <- "exo1"
 # STEP 2: VAR model estimation and testing:
 #
 # Granger causality tests
-require(lmtest) #install.packages("lmtest")
+library(lmtest) #install.packages("lmtest")
 # max. lag for the test is set ad-hoc:
 grangertest(Austria.ts[,"PPI_GAP_AT"], Austria.ts[,"U_GAP_AT"], order=3) 
 grangertest(Austria.ts[,"U_GAP_AT"], Austria.ts[,"PPI_GAP_AT"], order=3)  
 #
 # Maximum lag selection for the VAR model
-require(vars) #install.packages("vars")
+library(vars) #install.packages("vars")
 # We need to specify a dataset containing endogenous variables only
 Austria.ts.2 <- Austria.ts[, c("PPI_GAP_AT","U_GAP_AT")]
 VARselect(Austria.ts.2, lag.max=6, type="const")

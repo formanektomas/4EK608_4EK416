@@ -19,7 +19,7 @@ rm(list=ls())
 US.data <- read.csv("var1.csv")
 US.ts <- ts(US.data, start=c(1959,1), frequency = 12)
 # zoo objects provide simpler dataset manipulation as compared to ts
-require(zoo) #install.packages("zoo")
+library(zoo) #install.packages("zoo")
 US.zoo <- zoo(US.ts) 
 US.zoo$dIP <- diff(US.zoo$IP)
 US.zoo$dM1 <- diff(US.zoo$M1)
@@ -37,7 +37,7 @@ head(US.zoo) # All series have observations in levels and in first differences
 #
 # STEP 1: Stationariry of the series
 #
-require(tseries) #install.packages("tseries")
+library(tseries) #install.packages("tseries")
 # ADF tests for level values
 adf.test(US.zoo$IP, alternative ="stationary", k=6)
 adf.test(US.zoo$M1, alternative ="stationary", k=6)
@@ -63,14 +63,14 @@ adf.test(US.zoo$dTB3[2:372], alternative ="stationary")
 # Cointegration test (Johansen cointegration test)
 # .. Granger causality may not be tested among non-stationary series
 # .. For G-C tests, data need to be stationarized by differencing or by detrending.
-require(urca) #install.packages("urca")
+library(urca) #install.packages("urca")
 var.data.ts <- US.ts[, c("IP","M1","TB3")]
 ?ca.jo
 summary(ca.jo(var.data.ts, type = "eigen", ecdet = "const", spec="longrun"))
 # We do not reject the H0 that number of cointegration relations r <= 2.
 #
 # Maximum lag selection for the VAR model
-require(vars) #install.packages("vars")
+library(vars) #install.packages("vars")
 VARselect(var.data.ts, lag.max=12, type="const")
 # 
 #

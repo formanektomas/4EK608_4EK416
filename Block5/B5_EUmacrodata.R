@@ -30,7 +30,7 @@ legend("topleft", legend=c("EU GDP", "EU GDP Deflator"),
 #
 # STEP 1: (non)stationariry & cointegration of the series
 #
-require(tseries) #install.packages("tseries")
+library(tseries) #install.packages("tseries")
 # ADF tests for level values
 adf.test(EU.ts[,"GDP_EU"], alternative ="stationary", k=1)
 adf.test(EU.ts[,"GDP_DEF_EU"], alternative ="stationary", k=1)
@@ -40,7 +40,7 @@ adf.test(diff(EU.ts[,"GDP_DEF_EU"], lag=1), alternative ="stationary", k=1)
 # 1st diff of GDP_DEF_EU may be considered stationary at alpha = 10%
 #  
 #
-require(urca) #install.packages("urca")
+library(urca) #install.packages("urca")
 # Make a matrix with endogenous series only
 # .. for use in both Johansen cointegration test and for VECM estimation
 endog.ts <- EU.ts[, c("GDP_EU", "GDP_DEF_EU")]
@@ -89,7 +89,7 @@ summary(VECM_EU.dummy$rlm)
 #
 # Before IRF estimation, we need to transform the estimated object
 # into a "VAR" specification, suitable for IRF calculation
-require(vars) # install.packages("vars")
+library(vars) # install.packages("vars")
 vec2var.obj <- vec2var(EU_Jo.dummy)
 # Plot IRFs without saving them to the Global environment
 plot(irf(vec2var.obj))
@@ -116,7 +116,7 @@ fanchart(prediction.VECM)
 #
 #### A maximum likelihood VECM estimation may also be performed using {tsDyn}
 #
-require(tsDyn) # install.packages("tsDyn")
+library(tsDyn) # install.packages("tsDyn")
 ?VECM
 # both "endog.ts" and "exog" have been declared above
 VECM.mod <- VECM(endog.ts, lag = 3, r = 1, include = "both", estim="2OLS")

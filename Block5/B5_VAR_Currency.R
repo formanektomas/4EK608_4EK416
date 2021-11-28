@@ -22,7 +22,7 @@ cv.data <- read.csv("currencyvolume.csv")
 # G and GV observations starting from 1963:M01.
 cv.ts <- ts(cv.data[546:1053, ], start=c(1963,1), frequency = 12)
 cv.ts[,"OBS"] <- 1:508 # Observations are numbered starting on 1963:M01
-require(zoo)
+library(zoo)
 cv.zoo <- zoo(cv.ts)
 # 
 #
@@ -51,30 +51,36 @@ abline(lm(G ~ GV, data=cv.zoo), col = "red", lwd=2)
 #
 #
 # Stationariry of the series
-require(forecast) #install.packages("forecast")
+library(forecast) #install.packages("forecast")
 ?ndiffs
 ndiffs(cv.zoo[,"G"], alpha=0.05)
 ndiffs(cv.zoo[,"GV"], alpha=0.05)
+#
+?nsdiffs
+nsdiffs(cv.ts[,"G"], alpha=0.05)
+nsdiffs(cv.ts[,"GV"], alpha=0.05)
+#
 cv.zoo$dGV <- diff(cv.zoo[,"GV"])
+cv.zoo$dG <- diff(cv.zoo[,"G"])
 # .. Full ADF-test results may be obtained using {urca} or {tseries} packages
 #
 # Granger causality tests
-require(lmtest) #install.packages("lmtest")
+library(lmtest) #install.packages("lmtest")
 # max. lag for the test is set ad-hoc:
 
-grangertest(cv.zoo[,"dGV"], cv.zoo[,"G"], order=12) 
-grangertest(cv.zoo[,"G"], cv.zoo[,"dGV"], order=12)  
+grangertest(cv.zoo[,"dGV"], cv.zoo[,"dG"], order=12) 
+grangertest(cv.zoo[,"dG"], cv.zoo[,"dGV"], order=12)  
 # Also, we try max. lag = 4:
-grangertest(cv.zoo[,"dGV"], cv.zoo[,"G"], order=4)
-grangertest(cv.zoo[,"G"], cv.zoo[,"dGV"], order=4) 
+grangertest(cv.zoo[,"dGV"], cv.zoo[,"dG"], order=4)
+grangertest(cv.zoo[,"dG"], cv.zoo[,"dGV"], order=4) 
 # 
 #
 # Maximum lag selection for the VAR model
-require(vars) #install.packages("vars")
+library(vars) #install.packages("vars")
 ?VARselect
 # We need to specify a dataset containing endogenous variables only
 colnames(cv.zoo)
-cv.zoo.2 <- cv.zoo[2:nrow(cv.zoo), c("G","dGV")] # NAs in 1st row due to 1st diffs
+cv.zoo.2 <- cv.zoo[2:nrow(cv.zoo), c("dG","dGV")] # NAs in 1st row due to 1st diffs
 VARselect(cv.zoo.2, lag.max=12, type="const")
 # 
 #
@@ -111,6 +117,8 @@ normality.test(varmodel)
 # H0 of normality is rejected
 #
 # CUSUM test/plot for stability of the VAR model
+# .. see e.g. 
+# http://www.eviews.com/help/helpintro.html#page/content%2Ftesting-Stability_Diagnostics.html%23ww183720
 stability.test <- stability(varmodel, type="Rec-CUSUM")
 plot(stability.test)
 # Roots
