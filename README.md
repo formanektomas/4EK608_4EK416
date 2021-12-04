@@ -95,6 +95,11 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download presentation slides for Block 4](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.pdf)  
 + [Download R scripts for Block 4 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.zip)  
 + [Block 4 - seminar outline ](./Block4.html)  
+
+#### Reading, self-study and supplementary materials  
++ Wooldridge, J.: Introductory econometrics, 6th ed.: Part 3, ch.15 and ch.16. (basic topics)  
++ Greene, W.: Econometric analysis, 7th ed., 8th ed. : ch. 8 - Endogeneity and Instrumental Variable Estimation
++ Greene, W.: Econometric analysis, 7th ed., 8th ed. : ch. 10 - Systems of Equations
   
 ---
 
