@@ -37,7 +37,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download R scripts for Block 1 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block1/Block1.zip)  
 + [Block 1 - seminar outline ](./Block1.html)
 
-#### Reading, self-study and supplementary materials  
+#### Reading, self-study, and supplementary materials  
 + Wooldridge, J.: Introductory econometrics, 6th ed.: Appendices C-1 to C-4. (basic topics)  
 + Greene, W.: Econometric analysis, 7th ed., 8th ed. : Part III Estimation Methodology (text covers multiple advanced topics that are outside the syllabus of our coursse).  
 + [An Introduction to Statistical Learning, chapter 5 of the textbook](http://faculty.marshall.usc.edu/gareth-james/ISL/)  
@@ -57,7 +57,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download R scripts for Block 2 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block2/Block2.zip)  
 + [Block 2 - seminar outline ](./Block2.html)  
 
-#### Reading, self-study and supplementary materials  
+#### Reading, self-study, and supplementary materials  
 + Wooldridge, J.: Introductory econometrics, 6th ed.: Part 2: Regression Analysis with Time Series Data, ch.10-ch.12. (basic topics) 
 + Wooldridge, J.: Introductory econometrics, 6th ed.: chapter 18.     
 + Zivot, E., Wang, J.: Modelling Financial Time Series with S-PLUS, 2nd ed.: chapters 3,4,6 and 12.  
@@ -77,7 +77,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download R scripts for Block 3 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block3/Block3.zip)  
 + [Block 3 - seminar outline ](./Block3.html)  
  
-#### Reading, self-study and supplementary materials  
+#### Reading, self-study, and supplementary materials  
 + Wooldridge, J.: Introductory econometrics, 6th ed.: Part 3, ch.13 and ch.14. (basic topics)  
 + Greene, W.: Econometric analysis, 7th ed., 8th ed. : ch. 11 - Models for panel data    
 + [PhD-level course on panel data from NYU](http://people.stern.nyu.edu/wgreene/Econometrics/PanelDataEconometrics.htm)  
@@ -96,7 +96,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download R scripts for Block 4 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block4/Block4.zip)  
 + [Block 4 - seminar outline ](./Block4.html)  
 
-#### Reading, self-study and supplementary materials  
+#### Reading, self-study, and supplementary materials  
 + Wooldridge, J.: Introductory econometrics, 6th ed.: Part 3, ch.15 and ch.16. (basic topics)  
 + Greene, W.: Econometric analysis, 7th ed., 8th ed. : ch. 8 - Endogeneity and Instrumental Variable Estimation
 + Greene, W.: Econometric analysis, 7th ed., 8th ed. : ch. 10 - Systems of Equations
@@ -115,7 +115,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download R scripts for Block 5 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block5/Block5.zip)  
 + [Block 5 - seminar outline ](./Block5.html)  
 
-#### Reading, self-study and supplementary materials  
+#### Reading, self-study, and supplementary materials  
 + Zivot, E., & Wang, J. Modelling Financial Time Series with S-PLUS, ch. 11 - VAR models for multivariate time series  
 + Zivot, E., & Wang, J. Modelling Financial Time Series with S-PLUS, ch. 12 - Cointegration  
 
@@ -136,6 +136,9 @@ Material intended for self-study and preparation for state exams
 + [Download presentation slides for Block 6](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block6/Block6.pdf)  
 + [Download R scripts for Block 6 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block6/Block6.zip)  
 + [Block 6 - seminar outline ](./Block6.html)  
+
+#### Reading, self-study, and supplementary materials  
++ Wooldridge, J.: Introductory econometrics, 6th ed.: Part 3, ch.17. (basic topics)  
 
 ---  
 
