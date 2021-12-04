@@ -115,6 +115,10 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 + [Download R scripts for Block 5 (zip)](https://github.com/formanektomas/4EK608_4EK416/raw/master/Block5/Block5.zip)  
 + [Block 5 - seminar outline ](./Block5.html)  
 
+#### Reading, self-study and supplementary materials  
++ Zivot, E., & Wang, J. Modelling Financial Time Series with S-PLUS, ch. 11 - VAR models for multivariate time series  
++ Zivot, E., & Wang, J. Modelling Financial Time Series with S-PLUS, ch. 12 - Cointegration  
+
 ---
 
 ### Block 6: Limited dependent variables (LDVs) - repetition from BSc. courses
