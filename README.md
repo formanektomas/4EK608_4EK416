@@ -144,7 +144,7 @@ Material intended for self-study and preparation for state exams
 
 Please note that lectures (pdf presentations) and seminar workfiles (R scripts) can be updated without prior notice:  
 * clarifications, small edits and error corrections are made often,
-* as R packages are updated, syntax of different command and functions changes.
+* as R packages are updated, syntax of various command and functions can change.
 
 
 ---
