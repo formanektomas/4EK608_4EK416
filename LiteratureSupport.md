@@ -6,7 +6,7 @@ layout: default
 
 + Greene, W. H. (2012). Econometric Analysis, 7th Edition. Prentice Hall, Upper Saddle River. (chapters 7–11, 13,14,17–21)  
 + Davidson, R., & MacKinnon, J. G. (2004). Econometric theory and methods. New York: Oxford University Press. (chapters 6–15)  
-+ Wooldridge, J. M. (2015). Introductory econometrics: A modern approach, 6e. Cengage Learning. (chapters 10-18)  
++ Wooldridge, J. M. (2015). Introductory econometrics: A modern approach, 6e. Cengage Learning.  
 + Zivot, E., & Wang, J. (2006). Modelling Financial Time Series with S-PLUS, Second Edition. Springer-Verlag New York. (chapters 11 and 12) 
 + Hušek, R. (2007). Ekonometrická analýza. Oeconomica, Praha (in Czech language)
 
@@ -24,5 +24,11 @@ layout: default
 
 
 --- 
+
+## YouTube:
+
++ [Undergraduate and graduate materials by Ben Lambert](https://www.youtube.com/user/SpartacanUsuals/playlists)
+
+---
 
 [Homepage](./)
