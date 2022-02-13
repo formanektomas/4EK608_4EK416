@@ -65,9 +65,9 @@ coeftest(lm1, vcov = vcovHC(lm1, "HC0")) # White's HC0 robust errors
 
 Here, given the linear nature of the model, the estimated $\hat{\beta}_1$ to $\hat{\beta}_3$ coefficients are:
 
-* the ceteris paribus marginal effects, valid regardless of magnitudes of other regressors
-* Average partial effects, APEs (average marginal effects)
-* Partial effects at the average, PEAs (marginal effects at the average)
+* the ceteris paribus marginal effects. They are valid regardless of magnitudes of their corresponding regressors or magnitudes of other regressors.  
+    * Can be viewed as Average partial effects, APEs (average marginal effects)
+    * Can be viewed as Partial effects at the average, PEAs (marginal effects at the average)
 
 Standard errors $\textit{s.e.}(\hat{\beta}_j)$ are valid, regardless of observed regressor values (magnitudes).
 
