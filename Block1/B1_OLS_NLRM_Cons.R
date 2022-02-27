@@ -2,9 +2,11 @@
 #    
 #
 # Example based on
-# Greene: Econometric Analysis (5th ed.), 2002, pp 171-173
+# Greene: Econometric Analysis (5th ed.), 2002, pp 171-173 (Ch. 9.3)
+# or
+# Greene: Econometric Analysis (7th ed.), 2012, pp 231-233 (Ch. 7.2.5)
 #
-# Model data:
+# Data description & source:
 # Table F5.2: Macroeconomics Data Set, Quarterly, 1950I to 2000IV, 
 # 204 Quarterly Observations 
 # Source: Department of Commerce, BEA website and www.economagic.com
