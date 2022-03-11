@@ -182,6 +182,9 @@ Interpretation for $\alpha = 5\,\%$:
 * `phi3`: Because the test value `4.5933` $<$ `6.73` (the critical value), we do not reject the joint $H_0$ (test suggests `inf` is a U.R. process without a trend).
 
 
+```{r}
+summary(ur.df(phillips.zoo$inf, lags=1, type="none"))
+```
 
 
 ***
