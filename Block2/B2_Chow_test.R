@@ -38,9 +38,21 @@ plot(FS)
 plot(FS, pval = T) # p-val plotted
 #
 #
+# Alternative approach - use Chow 1 test (for a given potential break-point)
+library(gap)
+?chow.test
+# split depvar observations into two time periods
+y1 <- y[1:50]
+y2 <- y[51:100]
+# make regressor matrices for the two time periods
+x1 <- matrix(x[1:50],ncol=1)
+x2 <- matrix(x[51:100],ncol=1)
+#
+chow.test(y1,x1,y2,x2)
 #
 #
 #
+########################################################################
 #
 ## Example 2
 ## Based on the Phillips dataset
@@ -49,7 +61,7 @@ phillips <- read.csv('phillips.csv') # Read the data
 phillips <- phillips[complete.cases(phillips),] # removes the first obs with missing data
 phillips.ts <- ts(phillips, start = 1949, frequency = 1)
 library(zoo)
-phillips <- zoo(phillips)
+phillips <- zoo(phillips.ts)
 # prepare first differences and lags for estimation
 phillips$d.inf <- diff(phillips$inf)
 phillips$d.unem <- diff(phillips$unem)
@@ -92,6 +104,17 @@ summary(lm(d.inf ~ unem, data=phillips.ts))
 
 
 
-
+## Alternative approach - using the {gap} package
+#
+library(gap)
+# ?chow.test
+# split depvar observations into two time periods
+y1 <- as.vector(phillips[phillips$obs<=1980,"d.inf"]) # str(y1)
+y2 <- as.vector(phillips[phillips$obs>1980,"d.inf"])  # str(y2)
+# make regressor matrices for the two time periods
+x1 <- matrix(phillips[phillips$obs<=1980,"unem"],ncol=1)
+x2 <- matrix(phillips[phillips$obs>1980,"unem"],ncol=1)
+#
+chow.test(y1,x1,y2,x2)
 
 
