@@ -27,6 +27,13 @@
 + Greene, Econometric Analysis (7th ed., 8th ed.), Example 10.1
 + Aim: Long panels and the SURE approach  
 
+--- 
+
+### Seminar & self-study R scripts for Block 3
+
++ **Jtrain.R**  
+    + Wooldridge 6th Edition,  Example 14.1.
+    + Aim: FE estimator, basic model evaluation/testing and interpretation.  
 
 ---
 
