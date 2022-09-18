@@ -26,7 +26,7 @@ Grading scale
     + Midterm tests are mostly based on topics covered during the previous 2 weeks.  
     + If you miss a midterm test (properly reported medical absence only), there will be a special term during the 13th week.  
 
-     **Special term for the midterm tests (properly reported absences only): Wed, 11. May, 5PM, SB432.**
+     **Special term for the midterm tests (properly reported absences only): Wed, 13. Dec., 5PM, SB432.**
 
     + **COVID19:** instructions will be updated if we have to switch from in-class to on-line lectures & seminars.
 
