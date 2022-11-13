@@ -374,7 +374,7 @@ str(Grunfeld)
 
 5. Estimate a general-form SUR model, use FGLS.  
 
-6. Evaluate the validity of restrictions placed in step (4).  
+6. Evaluate the validity of restrictions placed in step (5).  
 
 
 --- 
