@@ -365,16 +365,12 @@ str(Grunfeld)
 #### Supervised work tasks:
 
 1. Convert `Grunfeld` to `pdata.frame` format.  
-
 2. Estimate `inv ~ value + capital` using a pooled OLS approach.  
-
 3. Perform equation-by-equation OLS estimation for each of the 10 companies.  
 4. Assess contemporaneous covariance/correlation of residuals from step (3).  
-4. Estimate the pooled SUR model with restricted (identical) beta parameters, use FGLS.  
-
-5. Estimate a general-form SUR model, use FGLS.  
-
-6. Evaluate the validity of restrictions placed in step (5).  
+5. Estimate the pooled SUR model with restricted (identical) beta parameters, use FGLS.  
+6. Estimate a general-form SUR model, use FGLS.  
+7. Evaluate the validity of restrictions placed in step (5).  
 
 
 --- 
