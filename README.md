@@ -40,7 +40,7 @@ Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) /
 #### Reading, self-study, and supplementary materials  
 + Wooldridge, J.: Introductory econometrics, 6th ed.: Chapters 1-5, Appendices C-1 to C-4. (basic topics)  
 + Greene, W.: Econometric analysis, 7th ed., 8th ed. : Part III Estimation Methodology (text covers numerous advanced topics, many are outside the syllabus of our coursse).  
-+ [An Introduction to Statistical Learning, chapter 5 of the textbook](http://faculty.marshall.usc.edu/gareth-james/ISL/)  
++ [An Introduction to Statistical Learning, chapter 5 of the textbook](https://www.statlearning.com/)  
 
 
 ---
