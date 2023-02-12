@@ -341,9 +341,9 @@ DeltaMethod(lm2,"(b2+b4*m1)")# m1 is the average value of atndrte
 
 Here, we use our sample to estimate (population) the average/expected effect of changing a regressor by 1 unit (given observed covariates):
 
-$\textit{APE}_j = \frac{1}{n} \sum_{i=1}^{n} f(\boldsymbol{x}_i \boldsymbol{\hat{\beta}})\hat{\beta}_j$
+$\textit{APE}_j = \frac{1}{n} \sum_{i=1}^{n} f_j(\boldsymbol{x}_i^{\prime} \boldsymbol{\hat{\beta}})$
 
-where $f(.)$ is $\frac{\partial y}{\partial x_j}$
+where $f_j(.) = \frac{\partial \hat{y}}{\partial x_j}$ : is the first derivative of the fitted RHS of regression equation along the $x_j$ regressor.
 
 ```{r}
 lm2<-lm(stndfnl ~ atndrte + priGPA + ACT + atndrte:priGPA , data=data) # repeated
