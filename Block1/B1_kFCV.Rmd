@@ -128,4 +128,4 @@ plot(cvFits, method = "density")
 ### Additional topics 
 
 * kFCV in time series (Walk forward method ) not covered here
-* For detailed discussion of the `kFCV` topic, see e.g. [James et. al: Introduction to Statistical Learning with Applications in R](https://www-bcf.usc.edu/~gareth/ISL/) , chapter 5 (5.1)
+* For detailed discussion of the `kFCV` topic, see e.g. [James et. al: Introduction to Statistical Learning with Applications in R](https://www.statlearning.com/) , chapter 5 (5.1)
