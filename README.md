@@ -19,11 +19,10 @@ University of Economics, Prague
 
 ---
 
-<---
+<!---
 **COVID 19 arrangements**  
 If on-line study is mandated, MS Teams groups will be established for on-line lectures and seminars.  
 Please make sure to install R/Rstudio at home: [R](https://www.r-project.org/) / [RStudio](https://www.rstudio.com/products/RStudio/) 
-
 ---
 ---> 
 
