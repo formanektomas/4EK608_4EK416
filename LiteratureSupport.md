@@ -12,7 +12,7 @@ layout: default
 
 ## Supporting literature:
 
-+ James, G. et al., [An Introduction to Statistical Learning](http://faculty.marshall.usc.edu/gareth-james/ISL/).
++ James, G. et al., [An Introduction to Statistical Learning](https://www.statlearning.com/)).
 + Hastie, T. et al., [The Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/).
 
 --- 
