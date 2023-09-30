@@ -69,13 +69,13 @@ Use `?cvFit` from the `{cvTools}` to familiarize with arguments to the `cvFit` f
 
 * 5-folds for cross-validation, 
 * 100 repetitions of the whole kFCV procedure (i.e. variance and distribution of the $CV(k)$ statistic can be empirically evaluated),
-* default evaluation: using root mean squared prediction error:  `rtmspe`
+* inefficency/cost of the estimator:  `mspe` (mean square prediction error).
 
 
 ##### Model 1
 
 ```{r}
-cv.Model.1 <- cvFit(Model.1, data = BWGHT, y = BWGHT$bwght, cost = rtmspe, 
+cv.Model.1 <- cvFit(Model.1, data = BWGHT, y = BWGHT$bwght, cost = mspe, 
                     K = 5, R = 100, seed = 1234)
 cv.Model.1
 ```
@@ -84,7 +84,7 @@ cv.Model.1
 ##### Model 2
 
 ```{r}
-cv.Model.2 <- cvFit(Model.2, data = BWGHT, y = BWGHT$bwght, cost = rtmspe, 
+cv.Model.2 <- cvFit(Model.2, data = BWGHT, y = BWGHT$bwght, cost = mspe, 
                     K = 5, R = 100, seed = 1234)
 cv.Model.2
 ```
@@ -93,7 +93,7 @@ cv.Model.2
 ##### Model 3
 
 ```{r}
-cv.Model.3 <- cvFit(Model.3, data = BWGHT, y = BWGHT$bwght, cost = rtmspe, 
+cv.Model.3 <- cvFit(Model.3, data = BWGHT, y = BWGHT$bwght, cost = mspe, 
                     K = 5, R = 100, seed = 1234)
 cv.Model.3
 ```
