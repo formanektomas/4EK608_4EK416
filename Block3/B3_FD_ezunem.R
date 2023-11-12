@@ -62,7 +62,7 @@ FD.fit <- plm(log(uclms) ~ ez +d82 +d83 +d84 +d85 +d86 +d87 +d88, data = ez.data
                 effect='individual')
 summary(FD.fit)
 # The effect of establishing an Economic zone may be calculated as
-100*(exp(coefficients(FD.fit)[1])-1) # results is in percentage points
+100*(exp(coefficients(FD.fit)[2])-1) # results is in percentage points
 #
 # Test for ar(1) in residuals
 #
