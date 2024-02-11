@@ -48,16 +48,16 @@ summary(lm1)
 
 The above standard errors come from the OLS estimation of variance-covariance matrix of estimated parameters:
 $$
-\textit{var}(\hat{\mathbf{\beta}})=\hat{\sigma}^2(\mathbf{X}^{\prime}\mathbf{X})^{-1}.
+\textit{var}(\hat{\pmb{\beta}})=\hat{\sigma}^2(\pmb{X}^{\prime}\pmb{X})^{-1}.
 $$  
 Different types of robust standard errors may be calculated, White's HC0 are given by:
 $$
-\textit{var}(\hat{\mathbf{\beta}})= 
-\mathbf{\hat{\,\Sigma \,}} = [(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}]
-\mathbf{\hat{\,\Omega \,}}
-[(\mathbf{X}^{\prime}\mathbf{X})^{-1}\mathbf{X}^{\prime}]^{\prime}
+\textit{var}(\hat{\pmb{\beta}})= 
+\pmb{\hat{\,\Sigma \,}} = [(\pmb{X}^{\prime}\pmb{X})^{-1}\pmb{X}^{\prime}]
+\pmb{\hat{\,\Omega \,}}
+[(\pmb{X}^{\prime}\pmb{X})^{-1}\pmb{X}^{\prime}]^{\prime}
 $$
-where $\mathbf{\hat{\Omega}}$ is a diagonal matrix with $(i,i)$ elements equal to $\hat{u}_i^2$.
+where $\pmb{\hat{\Omega}}$ is a diagonal matrix with $(i,i)$ elements equal to $\hat{u}_i^2$.
 
 ```{r}
 coeftest(lm1, vcov = vcovHC(lm1, "HC0")) # White's HC0 robust errors
@@ -163,31 +163,52 @@ Standard errors are not yet implemented in `{margins}` for the `at=` argument.
 
 ### Delta method - marginal effects & standard errors. 
 
-**Delta method intuition**  
 
-Consider a vector of estimated parameters $\hat{\mathbf{\beta}}$ and some function $\hat{g} = f(\hat{\mathbf{\beta}})$. Both $\hat{\mathbf{\beta}}$ and $\hat{g}$ are random variables and the variance of $\hat{g}$ is a function of variance of $\hat{\mathbf{\beta}}$. 
+**Delta method - short description**
 
-1. If $g$ is a linear function of $\mathbf{\beta}$, say $g = \mathbf{\omega}^{\prime}\mathbf{\beta}$ then: $$ \text{var} (\hat{g}) = \mathbf{\omega}^{\prime} \text{var}(\hat{\mathbf{\beta}}) \mathbf{\omega}$$
+- Used to estimate (approximate) the variance of a non-linear function $g$ of coefficient estimates $\hat{\pmb{\beta}}$.  
+- Approximation of variance is based on first order Taylor series expansion.  
+
+$$
+\text{var} \left[  g(\hat{\pmb{\beta}}) \right] 
+\approx  \nabla^{\prime} g(\hat{\pmb{\beta}}) \, \cdot \,
+\text{var}(\hat{\pmb{\beta}}) \, \cdot \, \nabla g(\hat{\pmb{\beta}})
+$$
+
+- while the gradient $\nabla g(\hat{\pmb{\beta}})$ can often be obtained analytically, `R` would use a numerical approximation (not discussed here).  
+
+
+--- 
+
+
+
+**Delta method - a more detailed intuition**  
+
+Consider a vector of estimated parameters $\hat{\pmb{\beta}}$ and some function $\hat{{g}} = f(\hat{\pmb{\beta}})$. Both $\hat{\pmb{\beta}}$ and $g$ are stochastic and the variance of $\hat{g}$ is a function of variance of $\hat{\pmb{\beta}}$. 
+
+1. If $g$ is a linear function of $\pmb{\beta}$, say $g = \pmb{\omega}^{\prime}\pmb{\beta}$ then: $$ \text{var} (\hat{g}) = \pmb{\omega}^{\prime} \text{var}(\hat{\pmb{\beta}})\, \pmb{\omega}$$
 (recall how variance of fitted value $\hat{y}_i$ is calculated).  
 
 2. If $g$ is non-linear, variance of $\hat{g}$ can be approximated through a first-order Taylor expansion. 
 
 ---
 
-Specifically, if $g$ is a function of parameter $\beta$ and $\hat{\beta}$ is a consistent, normally distributed estimator for that parameter:
+Specifically, if $g$ is a function of parameters $\pmb{\beta}$, and if $\hat{\pmb{\beta}}$ is a consistent, normally distributed estimator for that parameter:
 $$
-g(\hat{\beta}) \approx g(\beta) + \nabla g(\beta)^\prime (\hat{\beta} - \beta)
+g(\hat{\pmb{\beta}}) \approx g(\pmb{\beta}) + \nabla g(\pmb{\beta})^\prime (\hat{\pmb{\beta}} - \pmb{\beta})
 $$
-Since $\beta$ is a constant, and $\hat{\beta}$ is a consistent estimator for $\beta$, we can then say:
+Since $\pmb{\beta}$ is a constant, and $\hat{\pmb{\beta}}$ is a consistent estimator for $\pmb{\beta}$, we can then say:
 $$
-\sqrt{n}\left(g(\hat{\beta})-g(\beta)\right)\,\xrightarrow{D}\,N\left(0, \nabla g(\beta)^\prime \cdot \mathbf{\Sigma}_{\hat{\beta}} \cdot \nabla g(\beta)\right)
+\sqrt{n}\left(g(\hat{\pmb{\beta}})-g(\pmb{\beta})\right)\,\xrightarrow{D}\,N\left(0, \nabla g(\pmb{\beta})^\prime \cdot \pmb{\Sigma}_{\hat{\pmb{\beta}}} \cdot \nabla g(\pmb{\beta})\right)
 $$
 
 
-where $\hat{\beta}$ and $\Sigma_{\hat{\beta}}$ come from the OLS estimate and $g(\mathbf{\beta})$ is the marginal effect.
+where $\hat{\pmb{\beta}}$ and $\Sigma_{\hat{\pmb{\beta}}}$ come from the OLS estimate and $g(\pmb{\beta})$ is the marginal effect.   
 
----
 
+--- 
+
+--- 
 
 #### Emprical example 1, using `attend` data
 
@@ -205,18 +226,18 @@ Let's consider a unit change in `atndrte` (and fixing $\textit{priGPA}=\overline
 
 * Marginal effect can be expressed as a linear function (linear in parameters): 
 $$
-g(\mathbf{\beta}) = \beta_1 + \beta_4 \overline{\textit{priGPA}}
+g(\pmb{\beta}) = \beta_1 + \beta_4 \overline{\textit{priGPA}}
 $$
 
 * If you take the gradient of this function (remember, a function of relevant *coefficients* not of regressors), it would be:
 $$
-\nabla g(\mathbf{\beta})^\prime = [1,\,\, \overline{\textit{priGPA}}]^{\,\prime} \,,
+\nabla g(\pmb{\beta})^\prime = [1,\,\, \overline{\textit{priGPA}}]^{\,\prime} \,,
 $$
 
-* The matrix $\Sigma_{\hat{\beta}}$ comes from the OLS estimation of our main regression:
+* The matrix $\Sigma_{\hat{\pmb{\beta}}}$ comes from the OLS estimation of our main regression:
 
 $$
-\Sigma_{\hat{\beta}} = 
+\Sigma_{\hat{\pmb{\beta}}} = 
 \left[
 \begin{matrix}
 \textit{var}(\hat{\beta}_1) & \textit{cov}(\hat{\beta}_1,\hat{\beta}_4) \\
@@ -225,7 +246,7 @@ $$
 $$
 
 
-* Combining the above, the variance of $\hat{g} \equiv g(\hat{\beta})$ can be calculated using $\textit{var} (g) = \nabla g(\beta)^\prime \cdot \mathbf{\Sigma}_{\hat{\beta}} \cdot \nabla g(\beta)$, i.e. as:
+* Combining the above, the variance of $\hat{g} \equiv g(\hat{\pmb{\beta}})$ can be calculated using $\textit{var} (g) = \nabla g(\pmb{\beta})^\prime \cdot \pmb{\Sigma}_{\hat{\pmb{\beta}}} \cdot \nabla g(\pmb{\beta})$, i.e. as:
 $$
 \textit{var}(\hat{g}) =
 [1,\,\, \overline{\textit{priGPA}}]
@@ -278,12 +299,12 @@ sqrt(VC2) # compare to "Reparametrization"
 
 The previous two steps can be combined as follows:
 
-Let's define a matrix $\mathbf{G}=\{\partial g_i(\mathbf{\beta}) / \partial(\beta_j)\}$
+Let's define a matrix $\pmb{G}=\{\partial g_i(\pmb{\beta}) / \partial(\beta_j)\}$
 
 In our case (for marginal effects of the two interacting regressors): 
 
 $$
-\mathbf{G}=
+\pmb{G}=
 \left[
 \begin{matrix}
 1 & 0 & \overline{\textit{priGPA}} \\
@@ -293,7 +314,7 @@ $$
 
 Now, the variance of marginal effects can be estimated as 
 $$
-\textit{var}[g(\mathbf{\hat{\beta}})] = \mathbf{G} \,\,\mathbf{\Sigma}_{\hat{\beta}} \, \mathbf{G}^{\prime} \,,
+\textit{var}[g(\pmb{\hat{\beta}})] = \pmb{G} \,\,\pmb{\Sigma}_{\hat{\pmb{\beta}}} \, \pmb{G}^{\prime} \,,
 $$
 ```{r}
 V <- vcov(lm2) # repeated
@@ -326,6 +347,8 @@ $$
 
 ```{r}
 DeltaMethod(lm2,"(b1+b4*m2)") # m2 is the average value of priGPA
+# note how the coefficient numbering follows from lm() formula:
+# lm2 <- lm(stndfnl ~ atndrte + priGPA + ACT + atndrte:priGPA , data=data)
 ``` 
 
 2) For the effect of $\textit{priGPA}$ at $\textit{atndrte} = \overline{\textit{atndrte}}$:
