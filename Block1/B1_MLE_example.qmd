@@ -1,0 +1,230 @@
+---
+title: "Maximum Likelihood Estimation in R"
+format: html
+number_sections: true
+toc: true
+toc_float: true
+collapsed: true
+smooth_scroll: true
+toc-location: left
+toc_depth: 2
+theme: lumen
+---
+
+```{r, echo=F}
+library(knitr)
+```
+
+---
+
+## Goal of this exercise
+
+- Normal distribution: pdf, Likelihood function, log Likelihood (repetition)     
+- Estimation of parameters ($\mu$ and $\sigma^2$) of a distribution, using MLE (`optim()` function)  
+- Estimation of parameters of a LRM using MLE (`optim()` function)  
+
+--- 
+
+## Normal distribution - pdf
+
+* The probability density function (pdf) of a single observation $x \sim N(\mu,\sigma^2)$ is given by the formula:
+
+$$
+f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \, e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+$$
+
+* We can use `R` and plot the pdf for $x$ between $-3$ and $3$, with parameters $\mu=0, \sigma^2=1$, as follows:
+
+
+```{r}
+# In R, we specify the function calculating pdf for a single-value of x as:
+norm_pdf <- function(x, m, s){     
+  # x-observation, 
+  # m-mean of distribution, 
+  # s-sd of distribution
+dnsty = 1/sqrt(2*pi*s^2)*exp((-1/(2*s^2))*(x-m)^2)
+}
+# and plot it
+plot(seq(-3,3,.1),sapply(seq(-3,3,.1),FUN=norm_pdf,m=0,s=1),type='l',
+ylab='f(x)',xlab='x', main='PDF of Standardized Normal Distribution')
+```
+
+--- 
+
+* Values of the pdf for $N(0,1)$ at different $x$ observations can be calculated as:
+
+```{r}
+# Using our custom function
+print(norm_pdf(x=0, m=0, s=1))  # density (pdf) for x =   0
+print(norm_pdf(x=2, m=0, s=1))  # density (pdf) for x =   2
+print(norm_pdf(x=-2, m=0, s=1)) # density (pdf) for x =  -2
+print(norm_pdf(x=10, m=0, s=1)) # density (pdf) for x =  10
+# The same results can be produced using built-in R function dnorm()
+dnorm(0, mean=0, sd=1)  # density (pdf) for x =  0
+dnorm(2, mean=0, sd=1)  # density (pdf) for x =  2
+dnorm(-2, mean=0, sd=1) # density (pdf) for x = -2
+dnorm(10, mean=0, sd=1) # density (pdf) for x = 10
+```
+
+
+---- 
+
+## Normal distribution - Likelihood, log Likelihood
+
+* For a sequence of *iid*-type $x_i$ observations $(i=1,\dots,n)$, drawn from $N(\mu,\sigma^2)$, the Likelihood function is defined as:
+
+$$
+L(\mu, \sigma^2|x_1,\dots,x_n) = \prod_{i=1}^{n}
+\frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x_i - \mu)2}{2\sigma2}} 
+$$
+
+
+* Often, it is more convenient to work with the log-transformed Likelihood function:
+
+
+$$
+LL(\mu, \sigma^2|x_1,\dots,x_n) =
+ \sum_{i=1}^{n} \left[ -\frac{1}{2} \log(2\pi) -\frac{1}{2} \log(\sigma^2)- \frac{(x_i - \mu)2}{2\sigma^2} \right]
+$$
+ * After a simple transformation of the *LL* function, we can write an `R` function to calculate log-Likelihood:
+ 
+
+
+```{r}
+llik = function(par,x){
+  m=par[1] # m: mu estimate
+  s=par[2] # s: sd estimate
+  # log of the normal likelihood
+  # -n/2 * log(2*pi*s^2) + (-1/(2*s^2)) * sum((x-m)^2)
+  n=length(x)
+  ll = -(n/2)*(log(2*pi*s^2)) + (-1/(2*s^2)) * sum((x-m)^2)
+  return(ll)
+}
+```
+
+
+--- 
+
+* Using first order conditions, we get:
+
+    - estimator for the mean is equal to the sample mean: $\hat{\mu} = \frac{1}{n} \sum_{i=1}^{n} x_i$,  
+    - estimator for the variance is equal to the unadjusted sample variance: $\hat{\sigma}^2 = \frac{1}{n} \sum_{i=1}^{n} (x_i - \hat{\mu})^2\qquad$  (biased and consitent estimator).
+
+
+* While the analytical solution of the MLE estimator is known for our example, we can use `R` to show numerical MLE-based optimization (search for coefficient estimates).
+
+---
+
+### Single-variable MLE estimation example
+
+* We start by generating a sample of 100 observations such that $x_i \sim N(8,9)$*iid*:
+
+
+```{r}
+set.seed(123456) # for consistency set the seed explicitly.
+x <- rnorm(100, mean=8, sd=3) # rnorm() takes sd instead of var as argument
+hist(x, freq=FALSE,col='tan')
+lines(density(x),col='red',lwd=2)
+```
+
+
+* Using the `llik` function, we can try different values of the $m=\hat{\mu}$ estimate  
+* We try $m=0;~m=7;~m=25$, while keeping $\hat{\sigma}^2$ at the actual (population) value of $9$ for simplicity:
+
+```{r}
+llik(c(m=0, s=3), x=x)  # for \hat{\mu} = 0, the logLik is:
+llik(c(m=7, s=3), x=x)  # for \hat{\mu} = 7, the logLik is:
+llik(c(m=25, s=3), x=x) # for \hat{\mu} = 25, the logLik is:
+```
+
+* Here, the *LL* is highest for the `m=7` case - which happens to be the closest to the population mean, and - importantly - closest to the sample mean. Remember that *LL* function is calculated based on the sample of observations. 
+
+* In real life, we would need to estimate both $\mu$ and $\sigma^2$, without knowing the actual/population values.
+
+* For this purpose, we can use the `optim()` function:
+    - we could use the analytical solutions shown above, but this exercise focuses on numerical MLE estimation...  
+    
+
+```{r}
+# the function (here 'llik') is used for estimation,
+# some starting values ("estimtes") are provided to the optimizer 
+# vector of observations 'x' is provided
+# fnscale=-1 is for maximization (not default)
+MLE_estimate <- optim(par=c(m=1,s=1), 
+                      llik, 
+                      x=x, 
+                      control=list(fnscale=-1))
+```
+
+* Analytical solution can be compared with the MLE estimates as follows (note that we use the sd() function which corects for df):
+
+
+```{r}
+kable(cbind('analytical solution'=c('mean'=mean(x),'sd'=sd(x)),
+      'optim() - MLE estimation'= MLE_estimate$par))
+```
+
+
+
+---
+
+## Using MLE to estimate parameters in a LRM
+
+* Let's work with a simple linear regression model (SLRM, i.e model has one regressor), of the form
+
+$$
+y_i = \beta_0 + \beta_1 x_i + \varepsilon_i
+$$
+
+* To estimate model parameters using MLE (and the `optim()` function), we generate/simulate 100 observations that follow from population parameters:
+
+$$\beta_0 = 2,\quad \beta_1=3,\quad \sigma^2 = 1.$$
+
+
+```{r}
+set.seed(101) # For replicability
+X <- cbind(1, runif(100)) # generate some regressor observations
+theta.true <- c(Intercept=2,Slope=3,sigma=1) 
+# true intercept, slope and var(u) for next line
+y <- X %*% theta.true[1:2] + rnorm(100)      
+# argument sigma=1 is the default for rnorm()
+plot(y~X[,2])
+```
+
+* Now, we construct a likelihood function that uses a vector of three parameters $\pmb{\theta}^{\prime}=(\beta_0,\beta_1,\sigma^2)$: 
+
+```{r}
+# log Likelihood function of the linear model: y = beta0 + beta1*X + u
+# uses the simplified dnorm() version for individual pdfs
+lm_lf <- function(theta, y, X) {
+  b0=theta[1] # b_0 estimate
+  b1=theta[2] # b_1 estimate
+  s =theta[3] # s: sd of error estimate
+  sum(dnorm(y, mean = X %*% theta[-3], sd = theta[3], log = TRUE))
+}
+```
+
+* Finally, we can use our observations to estimate model parameters using MLE: 
+
+```{r}
+# Optimization started as some innacurate starting parameter values
+MLE.est <- optim(c(b0=5,b1=5,s=5),                           
+                 lm_lf,                             
+                 control=list(fnscale=-1),  
+                 y=y, X=X )                          
+MLE.est$par # estimated coefficients (theta hat vector)
+MLE.est$value # maximized log Likelihood value
+```
+
+---
+
+* MLE results can be compared with the OLS output as follows:  
+
+```{r}
+OLS.est <- lm(y~X[,2])
+summary(OLS.est)$coefficients[,1] # estimated coefficients
+summary(OLS.est)$sigma # variance calculated after OLS estimation
+logLik(OLS.est) # LL vaalue for the OLS-estimated coefficients
+```
+
+
