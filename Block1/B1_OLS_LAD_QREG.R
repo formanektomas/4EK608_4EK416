@@ -39,8 +39,9 @@ plot(OLS.1, which = 5)
 # If we drop the outlier from regression, the model is estimated (using OLS) as follows
 OLS.2 <- lm(infmort ~ log(pcinc) + log(physic) + log(popul), data = data[data$DC==0,])
 summary(OLS.2)
-#
 # We can see that the coefficients differ significantly
+#
+# One way to identify/mitigate the problem is to address heteroscedasticity:
 library(sandwich) # install.packages("sandwich")
 library(lmtest) # install.packages("lmtest")
 coeftest(OLS.1, vcov = vcovHC)
