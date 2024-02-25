@@ -129,3 +129,4 @@ DeltaMethod(NLS.2,"B*C*(obs2000IV^(C-1))")
 # deltaMethod(NLS.2,"B*C*(obs2000IV^(C-1))")
 #
 #
+#

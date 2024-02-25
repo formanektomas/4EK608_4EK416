@@ -145,7 +145,7 @@ xyplot(power ~ corr | model + nobs, groups = ~ test, data = psim, type = "b")
 * Durbin-Watson test (blue) performs better in the trend model - the difference is only pronounced for smaller samples and lower $\rho$. 
 * In the dynamic model, Durbin-Watson test has almost no power except for
 very high correlations. 
-* Breusch-Godfrey test (pink) performs reasonably well, unless $n$ is very small.
+* Breusch-Godfrey test (yellow) performs reasonably well, unless $n$ is very small.
 
 
 
