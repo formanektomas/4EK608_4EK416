@@ -29,6 +29,8 @@ layout: default
 
 + [Undergraduate and graduate materials by Ben Lambert](https://www.youtube.com/user/SpartacanUsuals/playlists)  
 + [An Introduction to Statistical Learning on-line course - videos](https://www.youtube.com/playlist?list=PLoROMvodv4rOzrYsAxzQyHb8n_RWNuS1e)
+
+  
 ---
 
 [Homepage](./)
