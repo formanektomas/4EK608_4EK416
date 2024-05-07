@@ -26,7 +26,7 @@ Grading scale
     + Midterm tests are mostly based on topics covered during the previous 2 weeks.  
     + If you miss a midterm test (properly reported medical absence only), there will be a special term during the 13th week.  
 
-     **Special term for the midterm tests (properly reported absences only): Wed, 9. May, 3PM, NB432.**
+     **Special term for the midterm tests (properly reported absences only): Thu, 9. May, 3PM, NB432.**
 
 + Final exam - multiple dates during the exam period: see InSIS  
 
