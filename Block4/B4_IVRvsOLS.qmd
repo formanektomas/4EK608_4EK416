@@ -1,0 +1,203 @@
+---
+title: "IVR vs OLS under endogeneity: simulation-based example"
+format: html
+---
+
+```{r, packages, message=FALSE,include=FALSE,echo=FALSE}
+library(AER)
+library(tidyverse)
+```
+
+----
+
+
+**Aim of the example:** To discuss and visualize the OLS-based endogeneity bias, using a known (sandbox) data generating process. Also, we demonstrate the properties of IVR (biased, yet consistent).  Amended from Example 4.8.8, Microeconometrics, Cameron & Trivedi, 2005).
+
+---
+
+## Consider the following DGP: 
+
+$$
+y_i = 1.5 + 0.5x_i + u_i,\\
+$$
+$$
+x_i = 1 + z_i + v_i, \qquad ~
+$$
+where:   
+
+* $z_i \sim N(2,1)$*iid*,  
+* $u_i \sim N(0,1)$,   
+* $v_i \sim N(0,1)$,   
+* $\textnormal{cov}(u_i,v_i)=0.8$.  
+
+
+
+
+We start by generating the two error-terms $u$ and $v$:
+
+
+```{r}
+#
+BivariateNormal <- function(N,cov1){
+  Sigma = matrix(c(1,cov1,cov1,1), ncol=2)
+  R = chol(Sigma) # Sigma == t(R) %*%  R
+  n = N
+  UV = t(R) %*% matrix(rnorm(n*2), 2)
+  UV <- data.frame(t(UV))
+  colnames(UV) <- c("u","v")
+  return(UV)
+}
+# bivariate normal series are generated using the function above
+set.seed(123456)
+Errs <- BivariateNormal(N = 100000, cov1 = 0.8) # use a simulated sample of 100.000
+```
+
+We can check the properties of simulated $u$ and $v$:  
+
+```{r}
+mean(Errs$u)
+mean(Errs$v)
+cov(Errs) # covariance matrix
+
+```
+
+* Simulations can also be obtained by `{mvtnorm::rmvnorm}`
+
+---
+
+## Next, we generate model variables, using 1.000 simulated observations:
+
+```{r}
+NN <- 1000 
+set.seed(12345678)
+Errs <- BivariateNormal(N = NN, cov1 = 0.8)
+u <- Errs$u
+v <- Errs$v
+z <- rnorm(NN, 2,1)
+x <- 1 + z + v
+y <- 1.5 + 0.5*x + u
+#
+```
+
+---- 
+
+## Endogeneity of the regressor *x*:
+
+
+By construction, $x$ and $u$ are co-dependent: 
+
+$$
+\text{cov} \left( [aX+bY],Z \right) = a \cdot \text{cov}(X,Z) + b \cdot \text{cov}(Y,Z),
+$$
+where $a,b$ are constants and $X,Y,Z$ are stochastic. For our example, this translates into the expected covariance between $x$ and $u$ given as:
+
+$$
+\text{cov}(x,u) = \text{cov} \left( [az+bv] ,u \right) = 
+\text{cov} \left( [1 \cdot z + 1 \cdot v],u \right) = \text{cov}(z,u) + \text{cov}(v,u) = 0 + 0.8 = 0.8.
+$$
+
+* Note how the intercept of DGP for $x$ is ignored in calculation.  
+* Using the 1.000 simulated observations, we get sample covariances as follows:  
+ 
+
+```{r}
+cov(z,u) # note how sample covariance differs from theoretical -zero-  
+cov(v,u) # note how sample covariance differs from theoretical 0.8 
+# 
+# In our example, sample covariance cov(x,u) = cov(z,u) + cov(v,u)
+cov(z,u)+cov(v,u)
+# when calculated directly, we get: 
+cov(x,u) 
+cor(x,u) # correlation between x, u is also non-zero
+```
+
+---
+
+## OLS vs IVR estimation under endogeneity
+
+We start by OLS estimation:
+
+```{r}
+summary(lm(y~x))
+```
+
+--- 
+
+OLS estimate $\hat{\beta}_1$ is **biased** (way off the $0.5$ actual/population value). The intercept estimate (i.e. $\hat{\beta}_0$) is also biased.
+
+**Questions:** 
+
+* What happens with the OLS estimates, if we set $\textnormal{cov}(u_i,v_i)=0$?  
+* What happens with the OLS estimates, if we set $\textnormal{cov}(u_i,v_i)=-0.8$?  
+
+--- 
+
+The IVR estimates are much closer to the population coefficients:
+
+
+```{r}
+IV_mod <- ivreg(y~x|z)
+summary(IV_mod,vcov = sandwich, diagnostics = T)
+```
+
+--- 
+
+**Questions:** 
+
+* What is a consistent estimator?
+* What happens if we increase the sample size of our simulated data?  
+
+---- 
+
+## IVR consistency for an endogenous regressor: illustration
+
+To illustrate properties of OLS and IVR, we use up to 3.000.000 simulated observations
+
+```{r}
+# define a new function that combines all steps for a given sample size and cov(u,v)
+simulate <- function(N, covSim = 0.8){
+  errorTerms <- BivariateNormal(N, covSim) 
+  u <- errorTerms$u
+  v <- errorTerms$v
+  z <- rnorm(N, 2,1)
+  x <- 1 + z + v
+  y <- 1.5 + 0.5*x + u
+  IV_mod <- ivreg(y~x|z)
+  IVbeta1 <- IV_mod$coefficients[2]
+  OLSbeta1 <- lm(y~x)$coefficients[2]
+  estimates <- as.data.frame(c(OLS=OLSbeta1,IVR=IVbeta1))
+  estimates <- t(estimates)
+  colnames(estimates) <- c("OLS","IVR")
+  return(estimates)
+}
+#
+set.seed(12345678)
+Ns <- seq(1000, 3000000, by = 150000)
+
+test <-purrr::map_vec(Ns, simulate)
+
+
+df <- data.frame(N = Ns, OLS = test[,1], IVR = test[,2])
+ggplot2::ggplot(df, ggplot2::aes(Ns, value))+
+  ggplot2::geom_hline(yintercept =  .5, color = "black")+
+  ggplot2::geom_line(ggplot2::aes(Ns, OLS), color="red")+
+  ggplot2::geom_line(ggplot2::aes(Ns, IVR), color="blue")+
+  ggplot2::xlab("Sample size (1.000 to 3.000.000)")+
+  ggplot2::ylab("Parameter estimates")+
+  ggplot2::ggtitle("IVR with different sample sizes")
+```
+
+For a better perspective on the IVR consistency properties, we can zoom-in to IVR estimates  
+
+```{r,echo=FALSE}
+ggplot2::ggplot(df, ggplot2::aes(Ns, value))+
+  ggplot2::geom_hline(yintercept =  .5, color = "black")+
+  ggplot2::geom_line(ggplot2::aes(Ns, IVR), color="blue")+
+  ggplot2::xlab("Sample Size (1.000 to 3.000.000)")+
+  ggplot2::ylab("IVR-based parameter estimates")+
+  ggplot2::ggtitle("IVR estimates only (OLS not shown) \n(note the y-axis scale difference from previous plot)")
+```
+
+**Question:** 
+
+* What would be the expected behavior of OLS and IVR estimates, if we set cov$(u_i,v_i)=0$, i.e. if $x$ is an exogenous regressor?   
