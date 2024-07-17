@@ -40,10 +40,10 @@ We start by generating the two error-terms $u$ and $v$:
 #
 BivariateNormal <- function(N,cov1){
   Sigma = matrix(c(1,cov1,cov1,1), ncol=2)
-  R = chol(Sigma) # Sigma == t(R) %*%  R
-  n = N
-  UV = t(R) %*% matrix(rnorm(n*2), 2)
-  UV <- data.frame(t(UV))
+  # Sigma = L %*% L^T  (Cholesky factorization)
+  LT = chol(Sigma) # L^T or t(L); upper triangular matrix, transpose of L.
+  UV = matrix(rnorm(N*2), ncol=2) %*% LT
+  UV <- data.frame(UV)
   colnames(UV) <- c("u","v")
   return(UV)
 }
