@@ -64,6 +64,17 @@ dnorm(0, mean=0, sd=1)  # density (pdf) for x =  0
 dnorm(2, mean=0, sd=1)  # density (pdf) for x =  2
 dnorm(-2, mean=0, sd=1) # density (pdf) for x = -2
 dnorm(10, mean=0, sd=1) # density (pdf) for x = 10
+#
+# We can also use the dnorm() to illustrate the principle of MLE
+# - note that MLE estimation should not be performed using single observations
+#
+# - say, we fix observation at zero and change the mean for "estimation" purposes
+# - we keep sd=1 for simplicity
+#
+dnorm(0, mean=0, sd=1)  # density (pdf) for x =  0
+dnorm(0, mean=2, sd=1)  # density (pdf) for x =  2
+dnorm(0, mean=-2, sd=1) # density (pdf) for x = -2
+dnorm(0, mean=10, sd=1) # density (pdf) for x = 10
 ```
 
 
@@ -75,7 +86,7 @@ dnorm(10, mean=0, sd=1) # density (pdf) for x = 10
 
 $$
 L(\mu, \sigma^2|x_1,\dots,x_n) = \prod_{i=1}^{n}
-\frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x_i - \mu)2}{2\sigma2}} 
+\frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x_i - \mu)^2}{2\sigma2}} 
 $$
 
 
@@ -84,7 +95,7 @@ $$
 
 $$
 LL(\mu, \sigma^2|x_1,\dots,x_n) =
- \sum_{i=1}^{n} \left[ -\frac{1}{2} \log(2\pi) -\frac{1}{2} \log(\sigma^2)- \frac{(x_i - \mu)2}{2\sigma^2} \right]
+ \sum_{i=1}^{n} \left[ -\frac{1}{2} \log(2\pi) -\frac{1}{2} \log(\sigma^2)- \frac{(x_i - \mu)^2}{2\sigma^2} \right]
 $$
  * After a simple transformation of the *LL* function, we can write an `R` function to calculate log-Likelihood:
  

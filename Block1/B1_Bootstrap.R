@@ -53,10 +53,10 @@ cat("The sample median wage is", median(wages))
 library("boot") # install.packages("boot")
 ?boot()
 #
-samplemedian <- function(x, d) {
-  return(median(x[d]))
+samplemedian <- function(x, index) {
+  return(median(x[index]))
 }
-# The notation x[d] allows us to make a new vector 
+# The notation x[index] allows us to make a new vector 
 # (the bootstrap sample), which is given to the median(). 
 # This reflects sampling with replacement from the original data vector.
 #
@@ -95,7 +95,7 @@ coef(lm(mpg~horsepower, data = Auto))
 # .. regressors are assumed to be uncorrelated with the random error
 #
 # Let's test for normally distributed residuals, using the
-# Shapiro–Wilk test, with a H0 hypothesis of normality.
+# Shapiro?Wilk test, with a H0 hypothesis of normality.
 shapiro.test(fit.1$residuals) # H0 is rejected..
 #
 # The asymptotic normality of coefficients' distributions
