@@ -10,18 +10,18 @@
 #       200 obs. each
 rm(list=ls())
 set.seed(12)
-rwalk1 = c(cumsum(rnorm(200)))
-rwalk1.ts = ts(rwalk1)
+y <- c(cumsum(rnorm(200)))
+y.ts <- ts(y)
 set.seed(1)
-rwalk2 = c(cumsum(rnorm(200)))
-rwalk2.ts = ts(rwalk2)
+x <- c(cumsum(rnorm(200)))
+x.ts <- ts(x)
 #
 # Plot the data
-plot(rwalk1.ts, type="l", ylim = c(-8,15))
-lines(rwalk2.ts, col="red")
+plot(y.ts, type="l", ylim = c(-8,15))
+lines(x.ts, col="red")
 #
 # Setup a linear model and examine it
-LM.1 <- lm(rwalk1.ts ~ rwalk2.ts)
+LM.1 <- lm(y.ts ~ x.ts)
 summary(LM.1)
 plot(resid(LM.1))
 acf(resid(LM.1))
@@ -77,7 +77,7 @@ ndiffs(LM.1$residuals, test = "adf")
 # (4) Phillips - Ouliaris test for cointegration
 library(urca)
 ?ca.po
-po <- ca.po(cbind(rwalk1.ts,rwalk2.ts), demean = "constant")
+po <- ca.po(cbind(y.ts,x.ts), demean = "constant")
 po
 summary(po)
 # for test statistic description, see e.g.
@@ -88,7 +88,7 @@ summary(po)
 ## Re-estimate the model using first differences
 # i.e. on stationarized data.
 #
-fd.mod <- lm(diff(rwalk1.ts) ~ diff(rwalk2.ts))
+fd.mod <- lm(diff(y.ts) ~ diff(x.ts))
 summary(fd.mod)
 plot(resid(fd.mod))
 acf(resid(fd.mod))
