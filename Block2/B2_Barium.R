@@ -91,11 +91,11 @@ bgtest(lm.10.11.T, order = 3)
 library(prais) # install.packages("prais", dependencies = T)
 # P-W for lm.10.5
 PW.10.5 <- prais_winsten(lchnimp ~ lchempi + lgas + lrtwex + befile6 + affile6 + afdec6, 
-              data=barium, index = barium$t)
+              data=barium, index = "t")
 summary(PW.10.5)
 # P-W for lm.10.11.T
 PW.10.11.T <- prais_winsten(lchnimp ~ lchempi + lgas + lrtwex + befile6 
-                            + affile6 + afdec6 + t, data=barium, index = barium$t)
+                            + affile6 + afdec6 + t, data=barium, index = "t")
 summary(PW.10.11.T)
 #
 library(orcutt) # install.packages("orcutt", dependencies = T)

@@ -114,8 +114,8 @@ tail(phillips.zoo,10)
 summary(lm.10.14) 
 #
 library(prais) # install.packages("prais")
-prais_winsten(lm.10.14, data=phillips.zoo[2:49,], index=phillips.zoo$obs )
-summary(prais_winsten(lm.10.14, data=phillips.zoo[2:49,], index=phillips.zoo$obs ))
+prais_winsten(lm.10.14, data=phillips.zoo[2:49,], index="obs" )
+summary(prais_winsten(lm.10.14, data=phillips.zoo[2:49,], index="obs" ))
 #
 #
 # The same FGLS estimation, using Cochrane Orcutt transformation
